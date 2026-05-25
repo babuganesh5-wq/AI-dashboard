@@ -297,6 +297,7 @@
             <!-- Global Nav tabs -->
             <nav class="hidden lg:flex items-center gap-1 bg-white/5 border border-white/5 rounded-md p-1">
                 <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer">Operations Hub</button>
+                <button onclick="switchTab('social-hub')" id="tab-btn-social-hub" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Social & Reels Hub</button>
                 <button onclick="switchTab('workflows')" id="tab-btn-workflows" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Workflow Canvas</button>
                 <button onclick="switchTab('integrations')" id="tab-btn-integrations" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Integrations Wall</button>
             </nav>
@@ -558,6 +559,52 @@
                                     <div class="text-[9px] text-slate-500">Asynchronous Value Lift</div>
                                 </div>
                             </div>
+
+                            <!-- Reels & Posts Conversion Pipeline Metrics -->
+                            <div class="border-t border-white/5 pt-3 mt-3 space-y-2 text-xs">
+                                <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                                    <span>Reels & Video Conversion Funnel</span>
+                                    <span class="text-indigo-400 font-bold bg-indigo-950/30 px-1 py-0.5 rounded text-[8px] uppercase">Viewer-To-Student pipeline</span>
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
+                                    <div class="bg-black/40 border border-white/5 p-2 rounded">
+                                        <div class="text-[9px] text-slate-500">Impressions</div>
+                                        <div class="text-white font-bold text-[13px] mt-0.5">348.2k</div>
+                                    </div>
+                                    <div class="bg-black/40 border border-white/5 p-2 rounded">
+                                        <div class="text-[9px] text-slate-500">Comments</div>
+                                        <div class="text-pink-400 font-bold text-[13px] mt-0.5">12,842</div>
+                                    </div>
+                                    <div class="bg-black/40 border border-white/5 p-2 rounded">
+                                        <div class="text-[9px] text-slate-500">DMs Opened</div>
+                                        <div class="text-cyan-400 font-bold text-[13px] mt-0.5" id="social-dm-count">1,642</div>
+                                    </div>
+                                    <div class="bg-black/40 border border-white/5 p-2 rounded relative overflow-hidden">
+                                        <div class="absolute -right-2 -bottom-2 w-6 h-6 bg-emerald-500/5 rounded-full blur-sm"></div>
+                                        <div class="text-[9px] text-slate-500">Enrolled Students</div>
+                                        <div class="text-emerald-400 font-bold text-[13px] mt-0.5" id="social-student-count">312</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-black/50 border border-white/5 rounded p-2.5 space-y-1.5 font-mono text-[10px]">
+                                    <div class="flex items-center justify-between text-[11px] font-semibold border-b border-white/5 pb-1">
+                                        <span class="text-white">Active Social Content Performance</span>
+                                        <span class="text-slate-400 text-[9px]">Course Conversion Matrix</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-400">Reel: 'Phase Cancellations Secrets'</span>
+                                        <span class="text-slate-300">24.2k views ➔ <span class="text-pink-400">128 DMs</span> ➔ <span class="text-emerald-400 font-bold">4 Students</span></span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-400">Video: 'Logic Pro Production Hacks'</span>
+                                        <span class="text-slate-300">18.5k views ➔ <span class="text-pink-400">92 DMs</span> ➔ <span class="text-emerald-400 font-bold">2 Students</span></span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-400">Post: 'Diploma Split Installments FAQ'</span>
+                                        <span class="text-slate-300">9.4k views ➔ <span class="text-pink-400">114 DMs</span> ➔ <span class="text-emerald-400 font-bold">8 Students</span></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -636,6 +683,305 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================== SOCIAL HUB & REELS INSIGHTS VIEWPORT ================== -->
+            <div id="viewport-social-hub" class="space-y-4 transition-all duration-300 hidden">
+                <!-- Overview Stats Header -->
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div class="p-4 bg-black/35 border border-white/5 rounded-xl font-mono relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-16 h-16 bg-pink-500/5 rounded-full blur-md"></div>
+                        <div class="text-[9px] text-slate-500">Blended Impressions</div>
+                        <div class="text-white font-bold text-[18px] mt-0.5" id="social-total-views">536.8k</div>
+                        <div class="text-[8px] text-emerald-400 mt-1 font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> +12.4% vs last week
+                        </div>
+                    </div>
+                    <div class="p-4 bg-black/35 border border-white/5 rounded-xl font-mono relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-16 h-16 bg-indigo-500/5 rounded-full blur-md"></div>
+                        <div class="text-[9px] text-slate-500">Engaging Comments</div>
+                        <div class="text-pink-400 font-bold text-[18px] mt-0.5" id="social-total-comments">24,650</div>
+                        <div class="text-[8px] text-emerald-400 mt-1 font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 9.2% Engagement
+                        </div>
+                    </div>
+                    <div class="p-4 bg-black/35 border border-white/5 rounded-xl font-mono relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-16 h-16 bg-cyan-500/5 rounded-full blur-md"></div>
+                        <div class="text-[9px] text-slate-500">Comment-to-DM Matches</div>
+                        <div class="text-cyan-400 font-bold text-[18px] mt-0.5" id="social-total-dms">3,482</div>
+                        <div class="text-[8px] text-cyan-400 mt-1 font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> 98.4% delivery
+                        </div>
+                    </div>
+                    <div class="p-4 bg-black/35 border border-white/5 rounded-xl font-mono relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-16 h-16 bg-purple-500/5 rounded-full blur-md"></div>
+                        <div class="text-[9px] text-slate-500">Captured Leads (CRM)</div>
+                        <div class="text-purple-400 font-bold text-[18px] mt-0.5" id="social-total-leads">842</div>
+                        <div class="text-[8px] text-emerald-400 mt-1 font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> +34 leads today
+                        </div>
+                    </div>
+                    <div class="p-4 bg-black/35 border border-white/5 rounded-xl font-mono relative overflow-hidden group col-span-2 lg:col-span-1">
+                        <div class="absolute right-0 top-0 w-16 h-16 bg-emerald-500/5 rounded-full blur-md"></div>
+                        <div class="text-[9px] text-slate-500">Enrolled Students</div>
+                        <div class="text-emerald-400 font-bold text-[18px] mt-0.5" id="social-total-enrolled">322</div>
+                        <div class="text-[8px] text-emerald-400 mt-1 font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce"></span> ROI: 8.64x Blended
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content & Stepper Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- Left: Social Handle Active Content List (7 cols) -->
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="glass-panel rounded-xl p-4 bg-black/35 space-y-3">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-pink-500 glow-magenta"></span>
+                                    <h3 class="text-xs uppercase font-mono tracking-wider text-slate-300">Active Social Content Performance</h3>
+                                </div>
+                                <div class="flex gap-1.5 font-mono text-[9px]">
+                                    <button onclick="filterSocialContent('all')" id="social-filter-all" class="bg-indigo-600 px-2.5 py-1 rounded border border-indigo-500/30 text-white font-semibold cursor-pointer">All</button>
+                                    <button onclick="filterSocialContent('reels')" id="social-filter-reels" class="bg-white/5 px-2.5 py-1 rounded border border-white/5 text-slate-400 hover:text-white cursor-pointer">Reels</button>
+                                    <button onclick="filterSocialContent('videos')" id="social-filter-videos" class="bg-white/5 px-2.5 py-1 rounded border border-white/5 text-slate-400 hover:text-white cursor-pointer">Videos</button>
+                                    <button onclick="filterSocialContent('posts')" id="social-filter-posts" class="bg-white/5 px-2.5 py-1 rounded border border-white/5 text-slate-400 hover:text-white cursor-pointer">Posts</button>
+                                </div>
+                            </div>
+
+                            <!-- Social Content Cards Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="social-posts-grid">
+                                <!-- Card 1: Reel -->
+                                <div class="social-post-card bg-black/40 hover:bg-black/60 transition p-3 rounded-lg border border-white/5 hover:border-pink-500/30 flex flex-col justify-between space-y-3" data-platform="reels" id="social-card-1">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[8px] font-mono text-pink-400 bg-pink-950/30 px-1.5 py-0.5 rounded border border-pink-500/20 font-bold">INSTAGRAM REEL</span>
+                                            <span class="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-950/20 px-1 rounded border border-emerald-500/10" id="social-rate-1">CVR: 3.12%</span>
+                                        </div>
+                                        <div class="relative w-full h-24 bg-gradient-to-br from-indigo-950/50 to-pink-950/30 rounded border border-white/5 flex items-center justify-center overflow-hidden">
+                                            <!-- Synthesized visual SVG thumbnail representation -->
+                                            <svg class="absolute inset-0 w-full h-full opacity-35" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                <circle cx="50" cy="50" r="30" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="4,2"/>
+                                                <path d="M10 50 Q50 20 90 50" fill="none" stroke="#6366f1" stroke-width="2"/>
+                                            </svg>
+                                            <div class="z-10 text-center px-2">
+                                                <div class="text-[10px] text-white font-bold leading-tight line-clamp-2">"Phase Cancellations Secrets"</div>
+                                                <div class="text-[8px] font-mono text-slate-400 mt-1">Hook keyword: "GROWTH"</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2 border-t border-white/5 pt-2 font-mono text-[9px]">
+                                        <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-slate-400">
+                                            <div>Views: <span class="text-white font-semibold">124.2k</span></div>
+                                            <div>Comments: <span class="text-pink-400 font-semibold">4,120</span></div>
+                                            <div>DMs Opened: <span class="text-cyan-400 font-semibold" id="social-card-dm-1">1,242</span></div>
+                                            <div>Enrolled: <span class="text-emerald-400 font-bold" id="social-card-student-1">38</span></div>
+                                        </div>
+                                        <button onclick="simulatePostClick(1)" class="w-full bg-pink-900/30 hover:bg-pink-900/50 text-pink-400 font-bold py-1.5 rounded border border-pink-500/30 transition text-[9px] font-mono cursor-pointer text-center block" id="social-sim-btn-1">
+                                            Trigger Conversion Simulator
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2: YouTube Shorts -->
+                                <div class="social-post-card bg-black/40 hover:bg-black/60 transition p-3 rounded-lg border border-white/5 hover:border-cyan-500/30 flex flex-col justify-between space-y-3" data-platform="videos" id="social-card-2">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[8px] font-mono text-cyan-400 bg-cyan-950/30 px-1.5 py-0.5 rounded border border-cyan-500/20 font-bold">YOUTUBE SHORTS</span>
+                                            <span class="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-950/20 px-1 rounded border border-emerald-500/10" id="social-rate-2">CVR: 2.45%</span>
+                                        </div>
+                                        <div class="relative w-full h-24 bg-gradient-to-br from-cyan-950/50 to-indigo-950/30 rounded border border-white/5 flex items-center justify-center overflow-hidden">
+                                            <svg class="absolute inset-0 w-full h-full opacity-35" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                <rect x="25" y="20" width="50" height="60" rx="5" fill="none" stroke="#06b6d4" stroke-width="1.5"/>
+                                                <path d="M45 40 L60 50 L45 60 Z" fill="#00f0ff"/>
+                                            </svg>
+                                            <div class="z-10 text-center px-2">
+                                                <div class="text-[10px] text-white font-bold leading-tight line-clamp-2">"Logic Pro Production Hacks"</div>
+                                                <div class="text-[8px] font-mono text-slate-400 mt-1">Hook keyword: "LEAD"</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2 border-t border-white/5 pt-2 font-mono text-[9px]">
+                                        <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-slate-400">
+                                            <div>Views: <span class="text-white font-semibold">98.5k</span></div>
+                                            <div>Comments: <span class="text-pink-400 font-semibold">3,248</span></div>
+                                            <div>DMs Opened: <span class="text-cyan-400 font-semibold" id="social-card-dm-2">914</span></div>
+                                            <div>Enrolled: <span class="text-emerald-400 font-bold" id="social-card-student-2">22</span></div>
+                                        </div>
+                                        <button onclick="simulatePostClick(2)" class="w-full bg-cyan-900/30 hover:bg-cyan-900/50 text-cyan-400 font-bold py-1.5 rounded border border-cyan-500/30 transition text-[9px] font-mono cursor-pointer text-center block" id="social-sim-btn-2">
+                                            Trigger Conversion Simulator
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card 3: Facebook / WhatsApp Post -->
+                                <div class="social-post-card bg-black/40 hover:bg-black/60 transition p-3 rounded-lg border border-white/5 hover:border-purple-500/30 flex flex-col justify-between space-y-3" data-platform="posts" id="social-card-3">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[8px] font-mono text-purple-400 bg-purple-950/30 px-1.5 py-0.5 rounded border border-purple-500/20 font-bold">SOCIAL PROMO POST</span>
+                                            <span class="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-950/20 px-1 rounded border border-emerald-500/10" id="social-rate-3">CVR: 4.88%</span>
+                                        </div>
+                                        <div class="relative w-full h-24 bg-gradient-to-br from-purple-950/50 to-emerald-950/30 rounded border border-white/5 flex items-center justify-center overflow-hidden">
+                                            <svg class="absolute inset-0 w-full h-full opacity-35" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                <line x1="10" y1="20" x2="90" y2="20" stroke="#a855f7" stroke-width="2"/>
+                                                <line x1="10" y1="40" x2="70" y2="40" stroke="#a855f7" stroke-width="1"/>
+                                                <line x1="10" y1="60" x2="80" y2="60" stroke="#a855f7" stroke-width="1"/>
+                                            </svg>
+                                            <div class="z-10 text-center px-2">
+                                                <div class="text-[10px] text-white font-bold leading-tight line-clamp-2">"Diploma Split Installments FAQ"</div>
+                                                <div class="text-[8px] font-mono text-slate-400 mt-1">Hook keyword: "SCALE"</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2 border-t border-white/5 pt-2 font-mono text-[9px]">
+                                        <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-slate-400">
+                                            <div>Views: <span class="text-white font-semibold">48.2k</span></div>
+                                            <div>Comments: <span class="text-pink-400 font-semibold">1,824</span></div>
+                                            <div>DMs Opened: <span class="text-cyan-400 font-semibold" id="social-card-dm-3">820</span></div>
+                                            <div>Enrolled: <span class="text-emerald-400 font-bold" id="social-card-student-3">40</span></div>
+                                        </div>
+                                        <button onclick="simulatePostClick(3)" class="w-full bg-purple-900/30 hover:bg-purple-900/50 text-purple-400 font-bold py-1.5 rounded border border-purple-500/30 transition text-[9px] font-mono cursor-pointer text-center block" id="social-sim-btn-3">
+                                            Trigger Conversion Simulator
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card 4: Reel 2 -->
+                                <div class="social-post-card bg-black/40 hover:bg-black/60 transition p-3 rounded-lg border border-white/5 hover:border-pink-500/30 flex flex-col justify-between space-y-3" data-platform="reels" id="social-card-4">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[8px] font-mono text-pink-400 bg-pink-950/30 px-1.5 py-0.5 rounded border border-pink-500/20 font-bold">INSTAGRAM REEL</span>
+                                            <span class="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-950/20 px-1 rounded border border-emerald-500/10" id="social-rate-4">CVR: 1.86%</span>
+                                        </div>
+                                        <div class="relative w-full h-24 bg-gradient-to-br from-pink-950/50 to-indigo-950/30 rounded border border-white/5 flex items-center justify-center overflow-hidden">
+                                            <svg class="absolute inset-0 w-full h-full opacity-35" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                <polygon points="50,15 90,85 10,85" fill="none" stroke="#ec4899" stroke-width="1.5"/>
+                                            </svg>
+                                            <div class="z-10 text-center px-2">
+                                                <div class="text-[10px] text-white font-bold leading-tight line-clamp-2">"Advanced Compression Magic"</div>
+                                                <div class="text-[8px] font-mono text-slate-400 mt-1">Hook keyword: "GROWTH"</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2 border-t border-white/5 pt-2 font-mono text-[9px]">
+                                        <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-slate-400">
+                                            <div>Views: <span class="text-white font-semibold">182.4k</span></div>
+                                            <div>Comments: <span class="text-pink-400 font-semibold">5,410</span></div>
+                                            <div>DMs Opened: <span class="text-cyan-400 font-semibold" id="social-card-dm-4">1,120</span></div>
+                                            <div>Enrolled: <span class="text-emerald-400 font-bold" id="social-card-student-4">21</span></div>
+                                        </div>
+                                        <button onclick="simulatePostClick(4)" class="w-full bg-pink-900/30 hover:bg-pink-900/50 text-pink-400 font-bold py-1.5 rounded border border-pink-500/30 transition text-[9px] font-mono cursor-pointer text-center block" id="social-sim-btn-4">
+                                            Trigger Conversion Simulator
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Pipeline Stepper Visualizer (5 cols) -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="glass-panel rounded-xl p-4 bg-black/35 flex flex-col space-y-4 relative overflow-hidden">
+                            <!-- Glow Accent behind stepper -->
+                            <div class="absolute -right-20 -bottom-20 w-44 h-44 bg-pink-500/5 rounded-full blur-2xl"></div>
+                            
+                            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                                <h3 class="text-xs uppercase font-mono tracking-wider text-slate-300 flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    Viewer ➔ Student Funnel Stream
+                                </h3>
+                                <span class="text-[9px] font-mono text-indigo-400 uppercase font-semibold">Active Tracker</span>
+                            </div>
+
+                            <!-- Visual Step Flow Diagram -->
+                            <div class="relative bg-black/55 border border-white/5 rounded-xl p-4 min-h-[380px] flex flex-col justify-between space-y-4">
+                                <!-- Horizontal progress line connecting items -->
+                                <div class="absolute left-7 top-8 bottom-8 w-[1px] bg-white/5 z-0" id="stepper-line-bg"></div>
+                                <div class="absolute left-7 top-8 w-[1px] bg-gradient-to-b from-pink-500 via-indigo-500 to-emerald-500 z-0 h-0 transition-all duration-500 animate-pulse" id="stepper-line-progress"></div>
+
+                                <!-- Stepper Step Nodes -->
+                                <div class="space-y-4 relative z-10 font-mono text-[10px]">
+                                    <!-- Node 1: Viewer Impression -->
+                                    <div class="flex gap-4 items-start step-node opacity-40 transition-all duration-300" id="step-node-1">
+                                        <div class="w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center shrink-0 text-[10px] text-slate-400 font-bold transition-all duration-300 z-10" id="step-circle-1">1</div>
+                                        <div class="flex-1 space-y-1">
+                                            <div class="text-slate-300 font-semibold flex items-center justify-between">
+                                                <span>1. Viewer Impression</span>
+                                                <span class="text-[8px] text-pink-400" id="step-value-1">+1 Organic View</span>
+                                            </div>
+                                            <p class="text-slate-500 text-[9px] leading-tight">Viewer discovers social media post and parses audio-visual hook elements.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Node 2: Hook Engagement -->
+                                    <div class="flex gap-4 items-start step-node opacity-40 transition-all duration-300" id="step-node-2">
+                                        <div class="w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center shrink-0 text-[10px] text-slate-400 font-bold transition-all duration-300 z-10" id="step-circle-2">2</div>
+                                        <div class="flex-1 space-y-1">
+                                            <div class="text-slate-300 font-semibold flex items-center justify-between">
+                                                <span>2. High-Intent Comment</span>
+                                                <span class="text-[8px] text-indigo-400 font-bold" id="step-value-2">"Send Details!"</span>
+                                            </div>
+                                            <p class="text-slate-500 text-[9px] leading-tight">Viewer leaves public comment matching tracked trigger keyword <span class="text-indigo-400 font-bold" id="step-keyword-term">GROWTH / SCALE</span>.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Node 3: Comment-to-DM Handshake -->
+                                    <div class="flex gap-4 items-start step-node opacity-40 transition-all duration-300" id="step-node-3">
+                                        <div class="w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center shrink-0 text-[10px] text-slate-400 font-bold transition-all duration-300 z-10" id="step-circle-3">3</div>
+                                        <div class="flex-1 space-y-1">
+                                            <div class="text-slate-300 font-semibold flex items-center justify-between">
+                                                <span>3. Comment-to-DM Trigger</span>
+                                                <span class="text-[8px] text-cyan-400" id="step-value-3">n8n Router Active</span>
+                                            </div>
+                                            <p class="text-slate-500 text-[9px] leading-tight">Asynchronous Meta Webhook received. SMM Ingest opens direct chat portal.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Node 4: Qualified CRM Prospect -->
+                                    <div class="flex gap-4 items-start step-node opacity-40 transition-all duration-300" id="step-node-4">
+                                        <div class="w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center shrink-0 text-[10px] text-slate-400 font-bold transition-all duration-300 z-10" id="step-circle-4">4</div>
+                                        <div class="flex-1 space-y-1">
+                                            <div class="text-slate-300 font-semibold flex items-center justify-between">
+                                                <span>4. Unified CRM Registries</span>
+                                                <span class="text-[8px] text-purple-400" id="step-value-4">Value Lift: ₹15,000</span>
+                                            </div>
+                                            <p class="text-slate-500 text-[9px] leading-tight">Database manager writes prospect, schedules studio tour, and uploads CAPI value lift events.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Node 5: Split Fee installment #1 -->
+                                    <div class="flex gap-4 items-start step-node opacity-40 transition-all duration-300" id="step-node-5">
+                                        <div class="w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center shrink-0 text-[10px] text-slate-400 font-bold transition-all duration-300 z-10" id="step-circle-5">5</div>
+                                        <div class="flex-1 space-y-1">
+                                            <div class="text-slate-300 font-semibold flex items-center justify-between">
+                                                <span>5. First Installment (₹15k)</span>
+                                                <span class="text-[8px] text-amber-400" id="step-value-5">Split Ledger PAID</span>
+                                            </div>
+                                            <p class="text-slate-500 text-[9px] leading-tight">Student checks in and clears 1st installment. Funnel state updates to OPPORTUNITY in SQLite.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Node 6: Batch Enrolled Student -->
+                                    <div class="flex gap-4 items-start step-node opacity-40 transition-all duration-300" id="step-node-6">
+                                        <div class="w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center shrink-0 text-[10px] text-slate-400 font-bold transition-all duration-300 z-10" id="step-circle-6">6</div>
+                                        <div class="flex-1 space-y-1">
+                                            <div class="text-slate-300 font-semibold flex items-center justify-between">
+                                                <span>6. Course Enrollment</span>
+                                                <span class="text-[8px] text-emerald-400 font-bold" id="step-value-6">Enrolled Customer</span>
+                                            </div>
+                                            <p class="text-slate-500 text-[9px] leading-tight">Second installment cleared. Converted from viewer to active Batch student in double schedules!</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Stepper Simulation Live Screen Console -->
+                                <div class="bg-black/60 rounded border border-white/5 p-2.5 font-mono text-[9px] text-slate-400 space-y-0.5 select-none shrink-0" id="social-simulator-console">
+                                    <div class="text-slate-500">[00:00:00] Webhook Daemon ready. Select a card to execute visual conversion.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1073,16 +1419,21 @@
         function switchTab(tabName) {
             currentTab = tabName;
             document.getElementById('viewport-dashboard').classList.add('hidden');
+            document.getElementById('viewport-social-hub').classList.add('hidden');
             document.getElementById('viewport-workflows').classList.add('hidden');
             document.getElementById('viewport-integrations').classList.add('hidden');
             
             document.getElementById('tab-btn-dashboard').className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer";
+            document.getElementById('tab-btn-social-hub').className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer";
             document.getElementById('tab-btn-workflows').className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer";
             document.getElementById('tab-btn-integrations').className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer";
 
             if(tabName === 'dashboard') {
                 document.getElementById('viewport-dashboard').classList.remove('hidden');
                 document.getElementById('tab-btn-dashboard').className = "px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer";
+            } else if(tabName === 'social-hub') {
+                document.getElementById('viewport-social-hub').classList.remove('hidden');
+                document.getElementById('tab-btn-social-hub').className = "px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer";
             } else if(tabName === 'workflows') {
                 document.getElementById('viewport-workflows').classList.remove('hidden');
                 document.getElementById('tab-btn-workflows').className = "px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer";
@@ -1928,12 +2279,24 @@ Fired social comment trigger 'GROWTH' simulation:<br>
                 }
             },
             {
-                title: "4. Automated Inbound Lead Capture (LangGraph)",
-                text: "Let's simulate a new lead! The Comment-to-DM system automatically registers the contact in SQLite, schedules a Studio Visit, and schedules two split installments.",
+                title: "3. Live Social & Reels Marketing Hub",
+                text: "Let's explore our social handles insights! Here we track views, comments, DMs, and conversions specifically for Reels, Videos, and Posts. Let's trigger a conversion simulator on a Reel...",
                 action: async () => {
-                    positionHighlightRing('live-kpi-leads', 4);
-                    await triggerSimulatedLeadIngest();
+                    cleanupHighlightRing();
+                    switchTab('social-hub');
+                    await new Promise(r => setTimeout(r, 1000));
+                    positionHighlightRing('social-card-1', 4);
                     await new Promise(r => setTimeout(r, 1500));
+                    simulatePostClick(1);
+                }
+            },
+            {
+                title: "4. Live SQL CRM & Ledger Synchronization",
+                text: "Let's switch back to the CRM ledger. Look! The viewer we just simulated has been captured, scheduled for a studio visit, and is automatically written to SQLite!",
+                action: async () => {
+                    cleanupHighlightRing();
+                    switchTab('dashboard');
+                    await new Promise(r => setTimeout(r, 1000));
                     positionHighlightRing('crm-ledger-table-body', 6);
                 }
             },
@@ -1991,6 +2354,248 @@ Fired social comment trigger 'GROWTH' simulation:<br>
             
             activeDemoStep++;
             setTimeout(executeNextDemoStep, 5000);
+        }
+
+        }
+
+        // ================== SOCIAL HUB & REELS SIMULATOR ENGINE ==================
+        const socialPostsData = {
+            1: {
+                title: "Phase Cancellations Secrets Reel",
+                platform: "INSTAGRAM REEL",
+                keyword: "GROWTH",
+                names: ["Aditya Sharma", "Priya Nair", "Shreya Rao"],
+                phones: ["+919876543210", "+919812345678", "+919922334455"],
+                cvrId: "social-rate-1",
+                cardDmId: "social-card-dm-1",
+                cardStudentId: "social-card-student-1",
+                platformKey: "META"
+            },
+            2: {
+                title: "Logic Pro Production Hacks Shorts",
+                platform: "YOUTUBE SHORTS",
+                keyword: "LEAD",
+                names: ["Karan Johar", "Rohan Verma", "Arun Kumar"],
+                phones: ["+919911223344", "+919844332211", "+919933445566"],
+                cvrId: "social-rate-2",
+                cardDmId: "social-card-dm-2",
+                cardStudentId: "social-card-student-2",
+                platformKey: "YOUTUBE"
+            },
+            3: {
+                title: "Diploma Split Installments FAQ Post",
+                platform: "SOCIAL PROMO POST",
+                keyword: "SCALE",
+                names: ["Deepak Gupta", "Meera Sen", "Vikram Shah"],
+                phones: ["+919712345678", "+919612345678", "+919512345678"],
+                cvrId: "social-rate-3",
+                cardDmId: "social-card-dm-3",
+                cardStudentId: "social-card-student-3",
+                platformKey: "META"
+            },
+            4: {
+                title: "Advanced Compression Magic Reel",
+                platform: "INSTAGRAM REEL",
+                keyword: "GROWTH",
+                names: ["Neha Roy", "Sameer Sen", "Anjali Bose"],
+                phones: ["+919412345678", "+919312345678", "+919212345678"],
+                cvrId: "social-rate-4",
+                cardDmId: "social-card-dm-4",
+                cardStudentId: "social-card-student-4",
+                platformKey: "META"
+            }
+        };
+
+        let currentActiveSimTimeout = null;
+
+        function filterSocialContent(category) {
+            const btnAll = document.getElementById('social-filter-all');
+            const btnReels = document.getElementById('social-filter-reels');
+            const btnVideos = document.getElementById('social-filter-videos');
+            const btnPosts = document.getElementById('social-filter-posts');
+
+            // Reset button classes
+            const normalClass = "bg-white/5 px-2.5 py-1 rounded border border-white/5 text-slate-400 hover:text-white cursor-pointer";
+            const activeClass = "bg-indigo-600 px-2.5 py-1 rounded border border-indigo-500/30 text-white font-semibold cursor-pointer";
+
+            btnAll.className = normalClass;
+            btnReels.className = normalClass;
+            btnVideos.className = normalClass;
+            btnPosts.className = normalClass;
+
+            if (category === 'all') btnAll.className = activeClass;
+            else if (category === 'reels') btnReels.className = activeClass;
+            else if (category === 'videos') btnVideos.className = activeClass;
+            else if (category === 'posts') btnPosts.className = activeClass;
+
+            const cards = document.querySelectorAll('.social-post-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-platform') === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            appendSystemLog(`Filtered active SMM creative cards by: ${category.toUpperCase()}`);
+        }
+
+        async function simulatePostClick(postIndex) {
+            if (currentActiveSimTimeout) {
+                clearTimeout(currentActiveSimTimeout);
+            }
+            
+            const post = socialPostsData[postIndex];
+            if (!post) return;
+
+            appendSystemLog(`[SIMULATOR] Launching Viewer-to-Student live pipeline for: "${post.title}"`, '[SMM_AGENT]', 'text-pink-400');
+            
+            const steps = [1, 2, 3, 4, 5, 6];
+            const delay = 1200; // time per step
+            
+            // Clean active steps styles
+            steps.forEach(s => {
+                const node = document.getElementById(`step-node-${s}`);
+                const circle = document.getElementById(`step-circle-${s}`);
+                node.className = "flex gap-4 items-start step-node opacity-40 transition-all duration-300";
+                circle.className = "w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center shrink-0 text-[10px] text-slate-400 font-bold transition-all duration-300 z-10";
+            });
+            document.getElementById('stepper-line-progress').style.height = "0%";
+
+            const stepText = {
+                1: () => `Simulating organic impression on social post. Updating global SMM dashboard views...`,
+                2: () => `High-intent keyword comment detected! Keyword: "${post.keyword}" parsed in Meta graph nodes.`,
+                3: () => `Firing Comment-to-DM async webhook. n8n workflow routing prospect chat session...`,
+                4: () => `CRM relational database entry created. Running speed-to-lead value lift optimization...`,
+                5: () => `Lead checks in batch. Clearing first split installment payment ₹15,000 in SQLite CRM...`,
+                6: () => `Clearing second split installment ₹15,000. Upgrading customer state in batches. Funnel complete!`
+            };
+
+            const consoleDiv = document.getElementById('social-simulator-console');
+            consoleDiv.innerHTML = `<div><span class="text-pink-400 font-bold">[SIM_START]</span> Dispatching viewer pipeline threads...</div>`;
+
+            let generatedLeadId = null;
+            let selectedName = post.names[Math.floor(Math.random() * post.names.length)];
+            let selectedPhone = post.phones[Math.floor(Math.random() * post.phones.length)];
+
+            function executeStepIndex(idx) {
+                if (idx > 6) {
+                    currentActiveSimTimeout = null;
+                    return;
+                }
+
+                // Highlight active step
+                const node = document.getElementById(`step-node-${idx}`);
+                const circle = document.getElementById(`step-circle-${idx}`);
+                
+                let activeColor = "border-pink-500 text-pink-400 shadow-[0_0_10px_rgba(236,72,153,0.3)] bg-pink-950/20";
+                if (idx === 2) activeColor = "border-indigo-500 text-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.3)] bg-indigo-950/20";
+                if (idx === 3) activeColor = "border-cyan-500 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.3)] bg-cyan-950/20";
+                if (idx === 4) activeColor = "border-purple-500 text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.3)] bg-purple-950/20";
+                if (idx === 5) activeColor = "border-amber-500 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)] bg-amber-950/20";
+                if (idx === 6) activeColor = "border-emerald-500 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)] bg-emerald-950/20 animate-pulse";
+
+                node.className = "flex gap-4 items-start step-node opacity-100 scale-[1.01] transition-all duration-300";
+                circle.className = `w-6 h-6 rounded-full border flex items-center justify-center shrink-0 text-[10px] font-bold transition-all duration-300 z-10 ${activeColor}`;
+
+                // Set progress bar height
+                const percentages = { 1: "0%", 2: "18%", 3: "36%", 4: "54%", 5: "76%", 6: "100%" };
+                document.getElementById('stepper-line-progress').style.height = percentages[idx];
+
+                // Append logs
+                const timestamp = new Date().toTimeString().split(' ')[0];
+                const msg = stepText[idx]();
+                
+                const logRow = document.createElement('div');
+                logRow.innerHTML = `<span class="text-slate-500">[${timestamp}]</span> ${msg}`;
+                consoleDiv.appendChild(logRow);
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
+
+                appendSystemLog(`[FUNNEL_STEP_${idx}] ${msg}`, '[CONVERSION_STEPS]', idx === 6 ? 'text-emerald-400' : 'text-slate-400');
+
+                // Perform side effects
+                if (idx === 1) {
+                    // Update views count slightly
+                    const currentViews = parseFloat(document.getElementById('social-total-views').innerText);
+                    document.getElementById('social-total-views').innerText = (currentViews + 0.1).toFixed(1) + 'k';
+                }
+                else if (idx === 2) {
+                    // Increment comments
+                    const currentComments = parseInt(document.getElementById('social-total-comments').innerText.replace(/,/g, ''));
+                    document.getElementById('social-total-comments').innerText = (currentComments + 1).toLocaleString();
+                }
+                else if (idx === 3) {
+                    // Increment DMs Opened
+                    const currentDMs = parseInt(document.getElementById('social-total-dms').innerText.replace(/,/g, ''));
+                    document.getElementById('social-total-dms').innerText = (currentDMs + 1).toLocaleString();
+                    const cardDM = document.getElementById(post.cardDmId);
+                    cardDM.innerText = (parseInt(cardDM.innerText.replace(/,/g, '')) + 1).toLocaleString();
+                    document.getElementById('social-dm-count').innerText = (parseInt(document.getElementById('social-dm-count').innerText.replace(/,/g, '')) + 1).toLocaleString();
+                }
+                else if (idx === 4) {
+                    // Increment Leads and actual database simulation
+                    const currentLeads = parseInt(document.getElementById('social-total-leads').innerText.replace(/,/g, ''));
+                    document.getElementById('social-total-leads').innerText = (currentLeads + 1).toLocaleString();
+                    
+                    simulateCRMLeadCreation(selectedName, selectedPhone, post.keyword).then(leadId => {
+                        generatedLeadId = leadId;
+                    });
+                }
+                else if (idx === 5) {
+                    // Clear 1st Split fee installment
+                    if (generatedLeadId) {
+                        payCRMInstallment(generatedLeadId, 1);
+                    }
+                }
+                else if (idx === 6) {
+                    // Clear 2nd Split fee installment & convert to student
+                    if (generatedLeadId) {
+                        payCRMInstallment(generatedLeadId, 2).then(() => {
+                            // Update Enrolled student counters
+                            const totalEnrolled = parseInt(document.getElementById('social-total-enrolled').innerText.replace(/,/g, ''));
+                            document.getElementById('social-total-enrolled').innerText = (totalEnrolled + 1).toLocaleString();
+                            
+                            const cardStudent = document.getElementById(post.cardStudentId);
+                            cardStudent.innerText = (parseInt(cardStudent.innerText.replace(/,/g, '')) + 1).toLocaleString();
+                            
+                            document.getElementById('social-student-count').innerText = (parseInt(document.getElementById('social-student-count').innerText.replace(/,/g, '')) + 1).toLocaleString();
+                            
+                            appendSystemLog(`[STUDENT_ENROLLED] Lead ${selectedName} fully converted into student! High-intent auction conversion signal published to Meta Ads.`, '[SUCCESS]', 'text-emerald-400');
+                        });
+                    }
+                }
+
+                currentActiveSimTimeout = setTimeout(() => executeStepIndex(idx + 1), delay);
+            }
+
+            executeStepIndex(1);
+        }
+
+        async function simulateCRMLeadCreation(name, phone, keyword) {
+            try {
+                // Post simulating triggers
+                const response = await fetch(`${API_BASE}/leads/simulate?name=${encodeURIComponent(name)}&whatsapp=${encodeURIComponent(phone)}&text=${encodeURIComponent('I want to scale up! keyword: ' + keyword)}`, { method: "POST" });
+                if (response.ok) {
+                    const data = await response.json();
+                    appendSystemLog(`[LANGGRAPH_ORCHESTRATOR] Simulated relational capture in database: ${name}. Identity Resolution synced.`, '[DB_MESH]', 'text-purple-400');
+                    await syncCRMTableData();
+                    
+                    // Return latest lead ID
+                    const leadsRes = await fetch(`${API_BASE}/leads`);
+                    if (leadsRes.ok) {
+                        const leadsData = await leadsRes.json();
+                        const found = leadsData.leads.find(l => l.student_name === name);
+                        if (found) return found.lead_id;
+                    }
+                }
+                throw new Error("API unreachable");
+            } catch (e) {
+                // Fallback simulation in memory
+                const mockId = `mock-lead-${Date.now()}`;
+                mockAddLead(name, phone);
+                appendSystemLog(`[SIMULATOR] Created local relational CRM prospect record: ${name}. Speed-to-lead logged at 4.2s.`, '[DB_FALLBACK]', 'text-purple-400');
+                return mockId;
+            }
         }
 
         function cleanupHighlightRing() {
