@@ -1,0 +1,36 @@
+# Antigravity AI - Workspace Git Ignore List
+# Protects secure credentials and cache files from accidental source control exposure
+
+# Environment and Secret Files
+.env
+.env.local
+.env.*.local
+*.env
+secrets.json
+
+# Node modules and build files
+node_modules/
+/dist/
+/.next/
+/out/
+/build/
+.vercel
+.idx/
+
+# Local cache and system files
+.DS_Store
+*.log
+*.tmp
+*.temp
+Thumbs.db
+
+# Virtual Environments and Python Cache
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/

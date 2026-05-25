@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity AI — Multi-Agent Conversion & Bidding OS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030307;
+        }
+        .tech-heading {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .mono-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Glassmorphism styling rules */
+        .glass-panel {
+            background: rgba(8, 8, 16, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card {
+            background: rgba(13, 13, 27, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.25);
+            box-shadow: 0 8px 30px rgba(0, 240, 255, 0.04);
+            transform: translateY(-2px);
+        }
+        /* Glowing neon visual components */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.25; filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.3)); }
+            50% { opacity: 0.75; filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.7)); }
+        }
+        .glow-cyan { animation: pulse-glow 3.5s infinite; }
+        
+        @keyframes pulse-magenta {
+            0%, 100% { opacity: 0.25; filter: drop-shadow(0 0 4px rgba(255, 0, 122, 0.3)); }
+            50% { opacity: 0.75; filter: drop-shadow(0 0 12px rgba(255, 0, 122, 0.7)); }
+        }
+        .glow-magenta { animation: pulse-magenta 3.5s infinite; }
+
+        /* Simulated connections particle flow */
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -80;
+            }
+        }
+        .flowing-line {
+            stroke-dasharray: 10, 5;
+            animation: dash 3s linear infinite;
+        }
+
+        /* Scroller customization */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.25);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 240, 255, 0.3);
+        }
+
+        /* Ambient glowing circles */
+        .ambient-glow-1 {
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+        }
+        .ambient-glow-2 {
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.08) 0%, transparent 75%);
+        }
+        .ambient-glow-3 {
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+        }
+
+        /* Drag-and-drop animation guide indicators */
+        .node-drag-preview {
+            border: 2px dashed rgba(0, 240, 255, 0.4);
+            background: rgba(0, 240, 255, 0.03);
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen overflow-hidden flex flex-col selection:bg-cyan-500 selection:text-black antialiased relative">
+
+    <!-- Ambient Space Background System -->
+    <div class="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-[-15%] left-[-15%] w-[60%] h-[60%] rounded-full blur-[150px] ambient-glow-1"></div>
+        <div class="absolute bottom-[-15%] right-[-15%] w-[70%] h-[70%] rounded-full blur-[180px] ambient-glow-2"></div>
+        <div class="absolute top-[35%] left-[30%] w-[40%] h-[40%] rounded-full blur-[130px] ambient-glow-3"></div>
+    </div>
+
+    <!-- ================== SECTION 0: PRODUCTION AUTHENTICATION GATEWAY OVERLAY ================== -->
+    <div id="auth-gateway" class="fixed inset-0 w-full h-full bg-black/85 z-[200] flex flex-col items-center justify-center p-4 backdrop-blur-xl transition-all duration-700">
+        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <div class="w-full max-w-md bg-slate-950/80 border border-white/10 rounded-2xl p-6 glass-card shadow-[0_0_50px_rgba(99,102,241,0.15)] space-y-6 relative overflow-hidden select-none">
+            <!-- Glow Accent -->
+            <div class="absolute -right-12 -top-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+            
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 rounded-xl flex items-center justify-center font-bold text-black text-xl mx-auto shadow-lg shadow-indigo-500/20">A</div>
+                <h2 class="tech-heading text-2xl font-bold text-white tracking-wide mt-2">ANTIGRAVITY AI</h2>
+                <p class="text-xs text-slate-400">Enterprise Credentials & OAuth Login Gateway</p>
+            </div>
+
+            <!-- Login forms and credentials inputs -->
+            <div class="space-y-4 pt-2" id="auth-form-container">
+                <!-- Validation Error Alert Panel -->
+                <div id="auth-error-msg" class="bg-red-950/40 border border-red-500/30 p-2.5 rounded-lg text-[10px] font-mono text-red-400 hidden leading-normal">
+                    Invalid Credentials Format.
+                </div>
+
+                <!-- Google Login Button -->
+                <button onclick="openGoogleOAuth()" class="w-full bg-white/5 hover:bg-white/10 text-white border border-white/10 py-3 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center gap-2 font-mono">
+                    <span class="text-cyan-400">G</span> Sign in with Google Workspace
+                </button>
+
+                <div class="relative flex py-1.5 items-center">
+                    <div class="flex-grow border-t border-white/5"></div>
+                    <span class="flex-shrink mx-3 text-[10px] font-mono text-slate-500 uppercase tracking-widest">or connect credentials</span>
+                    <div class="flex-grow border-t border-white/5"></div>
+                </div>
+
+                <!-- Credential parameters inputs -->
+                <div class="space-y-3">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Opal API Token</label>
+                        <input type="password" id="auth-key-opal" placeholder="sk-opal-..." class="w-full bg-black/60 border border-white/5 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-cyan-500 text-slate-200 transition font-mono">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">n8n Instance API Key</label>
+                        <input type="password" id="auth-key-n8n" placeholder="n8n_api_key_..." class="w-full bg-black/60 border border-white/5 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-cyan-500 text-slate-200 transition font-mono">
+                    </div>
+                </div>
+
+                <button onclick="simulateOAuthLogin('Opal & n8n Mesh')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-indigo-600/30 cursor-pointer text-xs font-mono uppercase tracking-widest mt-2">
+                    Verify & Decrypt Vault
+                </button>
+            </div>
+
+            <!-- Custom Google Account Selector Pop-Up -->
+            <div id="google-oauth-modal" class="absolute inset-0 bg-slate-950/98 flex flex-col items-center justify-center p-6 text-center space-y-4 hidden">
+                <div class="w-10 h-10 bg-slate-900 border border-white/10 rounded-xl flex items-center justify-center font-bold text-white text-md">G</div>
+                <div class="space-y-1">
+                    <h4 class="text-xs font-bold text-white tech-heading">Sign in with Google Workspace</h4>
+                    <p class="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Select an account for rhythm-academy.com</p>
+                </div>
+                <div class="w-full space-y-2">
+                    <div onclick="selectGoogleAccount('admin@rhythmacademy.com')" class="w-full bg-white/5 hover:bg-white/10 border border-white/5 p-2.5 rounded-lg text-left text-xs font-mono cursor-pointer flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-cyan-950 flex items-center justify-center text-[10px] text-cyan-400 font-bold">RA</span>
+                        <div class="flex-1">
+                            <div class="text-white font-semibold">Rhythm Academy Admin</div>
+                            <div class="text-[10px] text-slate-400">admin@rhythmacademy.com</div>
+                        </div>
+                    </div>
+                    <div onclick="selectGoogleAccount('faculty@rhythmacademy.com')" class="w-full bg-white/5 hover:bg-white/10 border border-white/5 p-2.5 rounded-lg text-left text-xs font-mono cursor-pointer flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-purple-950 flex items-center justify-center text-[10px] text-purple-400 font-bold">RF</span>
+                        <div class="flex-1">
+                            <div class="text-white font-semibold">Rhythm Academy Faculty</div>
+                            <div class="text-[10px] text-slate-400">faculty@rhythmacademy.com</div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeGoogleOAuth()" class="text-slate-500 hover:text-white font-mono text-[9px] uppercase tracking-widest pt-2 cursor-pointer">Cancel</button>
+            </div>
+
+            <!-- Loading overlay during key handshake -->
+            <div id="auth-loading-overlay" class="absolute inset-0 bg-slate-950/95 flex flex-col items-center justify-center p-6 text-center space-y-4 hidden">
+                <div class="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin"></div>
+                <div class="space-y-1">
+                    <h4 class="text-xs font-bold text-white tech-heading">Establishing Credentials Handshake</h4>
+                    <p class="text-[9px] font-mono text-slate-500 uppercase tracking-widest" id="auth-loading-status">Connecting to Opal secure keys vault...</p>
+                </div>
+                <div class="bg-black/50 border border-white/5 rounded p-2.5 w-full text-left font-mono text-[9px] text-slate-400 space-y-1" id="auth-loading-terminal">
+                    <div>[SECURE] Awaiting network handshakes...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== SECTION 1: CINEMATIC HERO INTRO LANDING SCREEN ================== -->
+    <div id="cinematic-hero" class="fixed inset-0 w-full h-full glass-panel z-[100] flex flex-col overflow-y-auto items-center justify-center p-6 text-center transition-all duration-750 transform scale-100 opacity-100">
+        <!-- Grid overlay matching the tactical aesthetic -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <div class="max-w-4xl mx-auto flex flex-col items-center relative z-10 space-y-6 select-none mt-12 mb-12">
+            <!-- Glass Header Logo Badge -->
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-xs font-mono tracking-widest text-cyan-400">
+                <span class="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-ping"></span>
+                <span>ANTIGRAVITY AT-FLOW ACTIVATION ENGINE</span>
+            </div>
+
+            <!-- Giant Neon Title -->
+            <h1 class="tech-heading text-5xl md:text-7xl font-bold tracking-tight text-white leading-none">
+                Deploy the Autonomous <br>
+                <span class="bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500 bg-clip-text text-transparent">Rhythm Academy Automation</span>
+            </h1>
+
+            <p class="text-slate-400 text-lg max-w-2xl font-light">
+                Orchestrating the **WhatsApp Inbound Capture** & **Automated Split Fee Reminders**. Match students to double parallel batches, sync class faculty schedules, and trigger offline conversion signals to lower ad acquisition costs.
+            </p>
+
+            <!-- Holographic Brain Grid / Dynamic Workflow Preview Container -->
+            <div class="w-full max-w-2xl bg-black/40 border border-white/5 rounded-2xl p-6 glass-card relative group overflow-hidden mt-4">
+                <div class="absolute -inset-px bg-gradient-to-r from-cyan-500/20 to-indigo-500/20 rounded-2xl blur-sm opacity-50 group-hover:opacity-100 transition duration-500"></div>
+                <div class="relative bg-black/60 rounded-xl p-4 flex flex-col space-y-4 text-left border border-white/5">
+                    <div class="flex items-center justify-between text-xs font-mono border-b border-white/5 pb-2">
+                        <span class="text-indigo-400">RHYTHM ACADEMY REVENUE FUNNEL</span>
+                        <span class="text-emerald-400">AUTOMATION: 100% LEDGER ACCURACY</span>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center gap-4 py-2">
+                        <div class="flex-1 bg-white/5 border border-white/5 p-3 rounded-lg text-xs space-y-1">
+                            <div class="text-[10px] font-mono uppercase text-indigo-400">1: WhatsApp Ingest</div>
+                            <div class="font-mono text-slate-300">Automated lead captured in postgres ledger</div>
+                        </div>
+                        <div class="text-slate-500 font-bold font-mono">➜</div>
+                        <div class="flex-1 bg-white/5 border border-white/5 p-3 rounded-lg text-xs space-y-1">
+                            <div class="text-[10px] font-mono uppercase text-pink-400">2: Split Fee Remind</div>
+                            <div class="font-mono text-slate-300">Reminds outstanding ₹15,000 installments</div>
+                        </div>
+                        <div class="text-slate-500 font-bold font-mono">➜</div>
+                        <div class="flex-1 bg-white/5 border border-white/5 p-3 rounded-lg text-xs space-y-1">
+                            <div class="text-[10px] font-mono uppercase text-cyan-400">3: Offline Conversion</div>
+                            <div class="font-mono text-slate-300">Completes studio visit check-in to Ads CAPI</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+                <button onclick="launchWorkspace()" class="tech-heading bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-xl transition shadow-xl shadow-indigo-500/20 cursor-pointer flex items-center gap-2">
+                    Launch Command Workspace
+                    <span class="text-xs font-mono border border-white/20 bg-black/20 px-1.5 py-0.5 rounded leading-none">⌘Space</span>
+                </button>
+                <button onclick="toggleLandingSectionDetails()" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 px-8 py-4 rounded-xl transition cursor-pointer">
+                    Inspect Conversion Architecture
+                </button>
+            </div>
+        </div>
+
+        <!-- Infrastructure spec details (toggleable drawer) -->
+        <div id="landing-infrastructure" class="w-full max-w-4xl bg-black/50 border border-white/5 rounded-xl p-6 text-left glass-card hidden space-y-4">
+            <h3 class="text-md font-bold tech-heading text-white flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-indigo-500 rounded-full glow-cyan"></span>
+                Antigravity Real-Time Funnel Processing Engine
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono text-slate-400">
+                <div class="bg-black/60 p-3 rounded border border-white/5 space-y-1">
+                    <div class="text-white font-bold">COMMENT-TO-DM TUNER</div>
+                    <div>High-concurrency webhook ingest</div>
+                    <div>Instant DM broadcast trigger</div>
+                    <div>Attribution parameters mapping</div>
+                </div>
+                <div class="bg-black/60 p-3 rounded border border-white/5 space-y-1">
+                    <div class="text-white font-bold">ASYNC VALUE LIFT ENGINE</div>
+                    <div>Dynamic qualification scoring</div>
+                    <div>Meta CAPI server uploads</div>
+                    <div>Google Offline conversions sync</div>
+                </div>
+                <div class="bg-black/60 p-3 rounded border border-white/5 space-y-1">
+                    <div class="text-white font-bold">MULTI-AGENT MEMORY</div>
+                    <div>PGVector cosine similarity lookup</div>
+                    <div>Local DeepSeek workflow routers</div>
+                    <div>KieAI Visual asset mutation factory</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== SECTION 2: WORKSPACE HEADER & STATUS BAR ================== -->
+    <header class="w-full h-14 border-b border-white/5 glass-panel sticky top-0 z-50 px-4 flex items-center justify-between shrink-0 font-mono">
+        <div class="flex items-center gap-6 font-normal">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="backToIntro()">
+                <div class="w-7 h-7 bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 rounded-lg flex items-center justify-center font-bold text-black text-sm tracking-tighter glow-cyan">A</div>
+                <div class="flex flex-col">
+                    <span class="tech-heading text-md font-bold tracking-wider bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">ANTIGRAVITY AI</span>
+                    <span class="text-[9px] uppercase font-mono tracking-widest text-cyan-400/80 -mt-0.5">Autonomous Multi-Agent OS</span>
+                </div>
+            </div>
+            
+            <!-- Global Nav tabs -->
+            <nav class="hidden lg:flex items-center gap-1 bg-white/5 border border-white/5 rounded-md p-1">
+                <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer">Operations Hub</button>
+                <button onclick="switchTab('workflows')" id="tab-btn-workflows" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Workflow Canvas</button>
+                <button onclick="switchTab('integrations')" id="tab-btn-integrations" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Integrations Wall</button>
+            </nav>
+        </div>
+        
+        <!-- Search triggers Copilot command palette -->
+        <div onclick="toggleCopilot()" class="hidden md:flex items-center gap-2 bg-black/40 border border-white/5 rounded-md px-3 py-1.5 w-80 text-xs text-slate-400 justify-between cursor-pointer hover:border-white/10 transition">
+            <div class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <span>Instruct Antigravity Copilot...</span>
+            </div>
+            <span class="font-mono text-[9px] bg-white/10 px-1.5 py-0.5 rounded text-slate-300">⌘K</span>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs font-mono">
+            <div class="hidden xl:flex items-center gap-2 border-r border-white/5 pr-4 text-slate-400">
+                <span>INFERENCE SPEC:</span>
+                <span class="text-purple-400 font-bold">Ollama / DeepSeek-R1</span>
+            </div>
+            <div class="flex items-center gap-2 text-cyan-400 bg-cyan-950/20 px-2 py-1 rounded border border-cyan-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span>MESH: ONLINE</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden relative z-10">
+        
+        <!-- ================== SECTION 3: LEFT SIDEBAR - LIVING WORKFORCE PANEL & LOCAL WORKSPACE MONITOR ================== -->
+        <aside class="w-72 border-r border-white/5 glass-panel hidden xl:flex flex-col p-4 overflow-y-auto shrink-0 select-none space-y-4">
+            
+            <!-- Agent workforce header -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs uppercase font-mono tracking-wider text-slate-400 flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        Autonomous Workforce
+                    </h3>
+                    <span class="text-[9px] font-mono text-slate-400 bg-indigo-950/30 px-1.5 py-0.5 rounded border border-indigo-500/20">8 Active</span>
+                </div>
+
+                <!-- Living Workforce Agent Cards -->
+                <div class="space-y-2" id="workforce-list">
+                    <!-- SEO Agent -->
+                    <div onclick="openAgentDrawer('seo')" class="p-2 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition cursor-pointer flex items-start gap-3">
+                        <div class="relative mt-0.5 shrink-0">
+                            <div class="w-8 h-8 rounded bg-cyan-950 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs">SEO</div>
+                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-black"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-200 truncate">SEO Engine</span>
+                                <span class="text-[9px] text-cyan-400 font-mono">94% CF</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 truncate mt-0.5">SERP indices mapped...</p>
+                        </div>
+                    </div>
+
+                    <!-- SEM Agent -->
+                    <div onclick="openAgentDrawer('sem')" class="p-2 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition cursor-pointer flex items-start gap-3">
+                        <div class="relative mt-0.5 shrink-0">
+                            <div class="w-8 h-8 rounded bg-purple-950 border border-purple-500/30 flex items-center justify-center text-purple-400 font-mono font-bold text-xs">SEM</div>
+                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-black"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-200 truncate">SEM Bidding</span>
+                                <span class="text-[9px] text-purple-400 font-mono">91% CF</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 truncate mt-0.5">Evaluating CPC CPA loops...</p>
+                        </div>
+                    </div>
+
+                    <!-- Meta Ads Agent -->
+                    <div onclick="openAgentDrawer('meta')" class="p-2 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition cursor-pointer flex items-start gap-3">
+                        <div class="relative mt-0.5 shrink-0">
+                            <div class="w-8 h-8 rounded bg-fuchsia-950 border border-fuchsia-500/40 flex items-center justify-center text-fuchsia-400 font-mono font-bold text-xs">AD</div>
+                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-black"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-200 truncate">Meta Ads Agent</span>
+                                <span class="text-[9px] text-fuchsia-400 font-mono">89% CF</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 truncate mt-0.5">Velocity conversion lift (+38% ROAS)</p>
+                        </div>
+                    </div>
+
+                    <!-- SMM Agent -->
+                    <div onclick="openAgentDrawer('smm')" class="p-2 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition cursor-pointer flex items-start gap-3">
+                        <div class="relative mt-0.5 shrink-0">
+                            <div class="w-8 h-8 rounded bg-indigo-950 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-mono font-bold text-xs">SMM</div>
+                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-black"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-200 truncate">Social Engagement</span>
+                                <span class="text-[9px] text-indigo-400 font-mono">95% CF</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 truncate mt-0.5">Comment-to-DM triggers parsed...</p>
+                        </div>
+                    </div>
+
+                    <!-- Content AI -->
+                    <div onclick="openAgentDrawer('content')" class="p-2 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition cursor-pointer flex items-start gap-3">
+                        <div class="relative mt-0.5 shrink-0">
+                            <div class="w-8 h-8 rounded bg-pink-950 border border-pink-500/30 flex items-center justify-center text-pink-400 font-mono font-bold text-xs">GEN</div>
+                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-black"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-200 truncate">Content AI Agent</span>
+                                <span class="text-[9px] text-pink-400 font-mono">97% CF</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 truncate mt-0.5">KieAI design prompts compiled...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Local Workspace Folder & File Monitor Panel -->
+            <div class="mt-auto pt-4 border-t border-white/5 space-y-3">
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+                    <span>Local Monitor Daemon</span>
+                    <span class="flex items-center gap-1.5 text-cyan-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                        Syncing
+                    </span>
+                </div>
+                
+                <!-- File drag zone -->
+                <div id="file-dropzone" class="bg-black/40 border border-dashed border-white/10 rounded-lg p-3 text-center cursor-pointer hover:border-cyan-500/30 hover:bg-white/5 transition flex flex-col items-center justify-center py-5">
+                    <svg class="w-6 h-6 text-slate-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <span class="text-[10px] text-slate-300 font-semibold">Drop CSV / Lead briefly</span>
+                    <span class="text-[9px] text-slate-500 font-mono mt-0.5">Syncs directly to RAG Vector</span>
+                </div>
+
+                <!-- Active Monitored Directories -->
+                <div class="bg-black/55 rounded border border-white/5 p-2.5 text-[10px] font-mono text-slate-400 space-y-1.5">
+                    <div class="flex items-center gap-1.5 truncate">
+                        <span class="text-amber-500">📁</span> <span>/workspace/leads_csv/</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 truncate">
+                        <span class="text-amber-500">📁</span> <span>/workspace/assets/</span>
+                    </div>
+                    <div class="text-[9px] text-slate-500 border-t border-white/5 pt-1.5 mt-1" id="file-monitor-log">
+                        [Local daemon] Monitored folders are clear.
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ================== SECTION 4: MAIN INTERACTIVE CORE VIEWPORTS ================== -->
+        <main class="flex-1 flex flex-col p-4 gap-4 overflow-y-auto relative z-10">
+            
+            <!-- Operations Hub Dashboard Tab -->
+            <div id="viewport-dashboard" class="space-y-4 transition-all duration-300 block">
+                
+                <!-- Main dynamic KPI parameters row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 rounded-xl glass-panel glass-card relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl group-hover:bg-cyan-500/10 transition-all"></div>
+                        <div class="text-xs font-mono text-slate-400 tracking-wider flex items-center justify-between">
+                            <span>CROSS-PLATFORM ROAS</span>
+                            <span class="text-cyan-400 font-bold bg-cyan-950/40 px-1.5 py-0.5 rounded border border-cyan-500/20 text-[9px]">+28.5%</span>
+                        </div>
+                        <div class="text-3xl font-bold tracking-tight mt-2 tech-heading text-white" id="live-kpi-roas">5.24x</div>
+                        <div class="text-[9px] text-slate-500 mt-1 font-mono">Comment-to-DM Inbound Attribution</div>
+                    </div>
+                    <div class="p-4 rounded-xl glass-panel glass-card relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/10 transition-all"></div>
+                        <div class="text-xs font-mono text-slate-400 tracking-wider flex items-center justify-between">
+                            <span>CONVERSION LEADS INBOUND</span>
+                            <span class="text-purple-400 font-bold bg-purple-950/40 px-1.5 py-0.5 rounded border border-purple-500/20 text-[9px]">+38% Lift</span>
+                        </div>
+                        <div class="text-3xl font-bold tracking-tight mt-2 tech-heading text-white" id="live-kpi-leads">16,482</div>
+                        <div class="text-[9px] text-slate-500 mt-1 font-mono">Social Comments Resolution Queue</div>
+                    </div>
+                    <div class="p-4 rounded-xl glass-panel glass-card relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-fuchsia-500/5 rounded-full blur-xl group-hover:bg-fuchsia-500/10 transition-all"></div>
+                        <div class="text-xs font-mono text-slate-400 tracking-wider flex items-center justify-between">
+                            <span>AD AUCTION SPEND PACE</span>
+                            <span class="text-fuchsia-400 font-bold bg-fuchsia-950/40 px-1.5 py-0.5 rounded border border-fuchsia-500/20 text-[9px]">Optimized</span>
+                        </div>
+                        <div class="text-3xl font-bold tracking-tight mt-2 tech-heading text-white">$4,850<span class="text-xs text-slate-500">/day</span></div>
+                        <div class="text-[9px] text-slate-500 mt-1 font-mono">Asynchronous Value Lift Engine active</div>
+                    </div>
+                    <div class="p-4 rounded-xl glass-panel glass-card relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-all"></div>
+                        <div class="text-xs font-mono text-slate-400 tracking-wider flex items-center justify-between">
+                            <span>AUTOMATION THROUGHPUT</span>
+                            <span class="text-emerald-400 font-bold bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-500/20 text-[9px]">99.98% SR</span>
+                        </div>
+                        <div class="text-3xl font-bold tracking-tight mt-2 tech-heading text-white">412 <span class="text-xs text-slate-400">ops/sec</span></div>
+                        <div class="text-[9px] text-slate-500 mt-1 font-mono">Comment webhooks processing rate</div>
+                    </div>
+                </div>
+
+                <!-- Deep dashboard splits -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    
+                    <!-- Left Core Panel: Trend Prediction Ingest & Content Studio -->
+                    <div class="lg:col-span-7 space-y-4">
+                        
+                        <!-- Content AI Studio Interface -->
+                        <div class="glass-panel rounded-xl p-4 space-y-3 bg-black/35">
+                            <h3 class="text-xs uppercase font-mono tracking-wider text-slate-400 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 bg-pink-500 rounded-full glow-magenta"></span>
+                                Antigravity Content Studio & Creative Permuter
+                            </h3>
+                            <div class="flex gap-2">
+                                <input type="text" id="studio-brief-input" placeholder="Enter product brief description or keyword trigger (e.g. comment 'GROWTH' visual permute)..." class="flex-1 bg-black/60 border border-white/5 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-cyan-500 text-slate-200 transition font-mono">
+                                <button onclick="triggerContentStudioPipeline()" class="bg-pink-600 hover:bg-pink-500 text-white font-semibold text-xs px-4 rounded-lg transition font-mono shrink-0 cursor-pointer">Permute Creative</button>
+                            </div>
+
+                            <!-- Generated Content Stream Output -->
+                            <div class="bg-black/60 rounded border border-white/5 p-3 min-h-[140px] text-xs max-h-[220px] overflow-y-auto" id="studio-output-box">
+                                <div class="text-slate-500 font-mono">[Studio Engine] Enter brief context or select a trending comment trigger keyword below to simulate visual and copy creations...</div>
+                            </div>
+                        </div>
+
+                        <!-- Trend Prediction Radar -->
+                        <div class="glass-panel rounded-xl p-4 bg-black/35 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xs uppercase font-mono tracking-wider text-slate-400 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-cyan-400 animate-spin" style="animation-duration: 8s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707-.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                                    Social Comment Trigger Prediction Radar
+                                </h3>
+                                <span class="text-[9px] font-mono text-cyan-400 bg-cyan-950/30 px-1.5 py-0.5 rounded border border-cyan-500/20">Keyword Tracking Active</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div onclick="fillStudioBrief('Instagram comment trigger keyword: \'GROWTH\'')" class="bg-white/5 hover:bg-white/10 transition p-2.5 rounded border border-white/5 cursor-pointer text-xs space-y-1.5">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[9px] font-mono text-indigo-400">INSTAGRAM REELS</span>
+                                        <span class="text-emerald-400 font-mono text-[9px]">+148%</span>
+                                    </div>
+                                    <div class="font-bold text-white leading-tight truncate">Keyword: "GROWTH"</div>
+                                    <div class="text-[9px] text-slate-500">Launch Comment-to-DM</div>
+                                </div>
+                                <div onclick="fillStudioBrief('YouTube Shorts comment trigger keyword: \'LEAD\'')" class="bg-white/5 hover:bg-white/10 transition p-2.5 rounded border border-white/5 cursor-pointer text-xs space-y-1.5">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[9px] font-mono text-cyan-400">YOUTUBE SHORTS</span>
+                                        <span class="text-emerald-400 font-mono text-[9px]">+224%</span>
+                                    </div>
+                                    <div class="font-bold text-white leading-tight truncate">Keyword: "LEAD"</div>
+                                    <div class="text-[9px] text-slate-500">Capture qualified context</div>
+                                </div>
+                                <div onclick="fillStudioBrief('WhatsApp ad attribution keyword: \'SCALE\'')" class="bg-white/5 hover:bg-white/10 transition p-2.5 rounded border border-white/5 cursor-pointer text-xs space-y-1.5">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[9px] font-mono text-fuchsia-400">WHATSAPP OPT-IN</span>
+                                        <span class="text-emerald-400 font-mono text-[9px]">+92%</span>
+                                    </div>
+                                    <div class="font-bold text-white leading-tight truncate">Keyword: "SCALE"</div>
+                                    <div class="text-[9px] text-slate-500">Asynchronous Value Lift</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Core Panel: Asynchronous Value Lift Engine -->
+                    <div class="lg:col-span-5 glass-panel rounded-xl p-4 bg-black/35 flex flex-col space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xs uppercase font-mono tracking-wider text-slate-400 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                                Asynchronous Value Lift Engine
+                            </h3>
+                            <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/20 px-1.5 py-0.5 rounded border border-emerald-500/20">Auction Opt</span>
+                        </div>
+
+                        <!-- Spend/budget adjustment visual flowchart -->
+                        <div class="bg-black/60 rounded border border-white/5 p-3 flex-1 flex flex-col justify-between text-xs space-y-3">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                                <span class="font-mono text-slate-400">CONVERSION VELOCITY STATS</span>
+                                <span class="text-cyan-400 font-bold font-mono">CAPI Match: 92.4% EMQ</span>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-400">Comment-to-DM Response Speed:</span>
+                                    <span class="text-white font-mono font-semibold">&lt; 1.2 seconds</span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-400">Asynchronous ROAS Lift Factor:</span>
+                                    <span class="text-emerald-400 font-mono font-bold">+38.5% Net ROAS</span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-400">CAPI Signal Delivery Success:</span>
+                                    <span class="text-cyan-400 font-mono font-semibold">99.98% Synced</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-t border-white/5 space-y-2">
+                                <div class="flex gap-2">
+                                    <button onclick="simulateCampaignAction('scale')" class="flex-1 bg-cyan-950/30 hover:bg-cyan-950/50 text-cyan-400 font-bold py-1.5 rounded border border-cyan-500/30 transition text-[10px] font-mono cursor-pointer">Verify Lift Dispatch</button>
+                                    <button onclick="simulateCampaignAction('pause')" class="flex-1 bg-red-950/30 hover:bg-red-950/50 text-red-400 font-bold py-1.5 rounded border border-red-500/30 transition text-[10px] font-mono cursor-pointer">Simulate Trigger Peak</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflows Node-Based Automation Tab (React Flow Simulator) -->
+            <div id="viewport-workflows" class="flex-1 glass-panel rounded-xl border border-white/5 flex flex-col relative overflow-hidden bg-black/20 min-h-[480px] hidden">
+                <div class="w-full h-11 border-b border-white/5 px-4 flex items-center justify-between shrink-0 bg-black/40">
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        <span class="font-mono text-slate-300 font-semibold tracking-wide">Antigravity Multi-Node Conversion Router</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <button onclick="resetFlowCanvas()" class="bg-white/5 hover:bg-white/10 px-2.5 py-1.5 rounded border border-white/5 transition font-mono text-[10px] text-slate-300 cursor-pointer">Reset View</button>
+                        <button onclick="addNewNode()" class="bg-indigo-600 hover:bg-indigo-500 px-2.5 py-1.5 rounded transition font-mono text-[10px] font-semibold text-white shadow-lg shadow-indigo-600/20 cursor-pointer">+ Inject Node</button>
+                    </div>
+                </div>
+
+                <!-- React Flow simulator canvas space -->
+                <div class="flex-1 relative overflow-hidden cursor-crosshair flex items-center justify-center p-4" id="workflow-canvas">
+                    <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 18px 18px;"></div>
+                    
+                    <!-- SVG connectors block -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" id="workflow-svg-connectors">
+                        <!-- Path from trigger to content -->
+                        <path d="M 230 140 Q 320 80 430 110" fill="none" stroke="rgba(168, 85, 247, 0.4)" stroke-width="2" />
+                        <path class="flowing-line" d="M 230 140 Q 320 80 430 110" fill="none" stroke="#a855f7" stroke-width="2" />
+                        
+                        <!-- Path from trigger to langgraph -->
+                        <path d="M 230 160 Q 320 220 430 200" fill="none" stroke="rgba(99, 102, 241, 0.4)" stroke-width="2" />
+                        <path class="flowing-line" d="M 230 160 Q 320 220 430 200" fill="none" stroke="#6366f1" stroke-width="2" />
+
+                        <!-- Path from content to sheets -->
+                        <path d="M 630 110 Q 730 60 830 80" fill="none" stroke="rgba(16, 185, 129, 0.4)" stroke-width="2" />
+                        <path class="flowing-line" d="M 630 110 Q 730 60 830 80" fill="none" stroke="#10b981" stroke-width="2" />
+
+                        <!-- Path from content to KieAI renderer -->
+                        <path d="M 630 130 Q 730 200 830 180" fill="none" stroke="rgba(244, 63, 94, 0.4)" stroke-width="2" />
+                        <path class="flowing-line" d="M 630 130 Q 730 200 830 180" fill="none" stroke="#f43f5e" stroke-width="2" />
+
+                        <!-- Path from KieAI to Meta Ads -->
+                        <path d="M 1030 180 Q 1110 240 1200 230" fill="none" stroke="rgba(236, 72, 153, 0.4)" stroke-width="2" stroke-dasharray="10,5" />
+                    </svg>
+
+                    <!-- Interactive nodes grid alignment layout -->
+                    <div class="w-full max-w-7xl flex flex-col lg:flex-row items-center justify-between relative z-10 gap-12 lg:gap-0" id="nodes-container">
+                        
+                        <!-- Col 1: Webhook social triggers -->
+                        <div class="flex flex-col gap-10">
+                            <!-- Comment Trigger Inbound Node -->
+                            <div onclick="selectNode('node-tg-trigger')" id="node-tg-trigger" class="w-52 p-3 rounded-lg border border-indigo-500/40 bg-slate-950/90 shadow-[0_0_15px_rgba(99,102,241,0.1)] backdrop-blur-md relative cursor-pointer hover:border-indigo-400 transition-all select-none">
+                                <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-indigo-500 rounded-full border-2 border-black"></div>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-[9px] font-mono uppercase text-indigo-400 tracking-widest font-bold">WhatsApp Inbound Inflow</div>
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                </div>
+                                <div class="text-xs font-semibold text-white mt-1">Lead Capture & Registry</div>
+                                <div class="text-[9px] font-mono text-slate-400 mt-2 bg-black/40 p-1 rounded border border-white/5 truncate">Capture: Name & Contact</div>
+                            </div>
+                        </div>
+
+                        <!-- Col 2: Processing Orchestrators -->
+                        <div class="flex flex-col gap-14">
+                            <!-- Content AI Agent Node -->
+                            <div onclick="selectNode('node-content-agent')" id="node-content-agent" class="w-52 p-3 rounded-lg border border-purple-500/30 bg-slate-950/80 shadow-xl backdrop-blur-md relative cursor-pointer hover:border-purple-400 transition-all select-none">
+                                <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-purple-500 rounded-full border-2 border-black"></div>
+                                <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-purple-500 rounded-full border-2 border-black"></div>
+                                <div class="text-[9px] font-mono uppercase text-purple-400 tracking-widest font-bold">Course Conversion AI</div>
+                                <div class="text-xs font-semibold text-white mt-1">Lead intent & Qualification</div>
+                                <div class="text-[9px] text-slate-400 mt-1.5 font-mono flex items-center justify-between">
+                                    <span>Touchpoint</span><span class="text-cyan-400 font-bold">Studio Visit</span>
+                                </div>
+                            </div>
+
+                            <!-- LangGraph Memory Core Node -->
+                            <div onclick="selectNode('node-langgraph-memory')" id="node-langgraph-memory" class="w-52 p-3 rounded-lg border border-cyan-500/30 bg-slate-950/80 shadow-xl backdrop-blur-md relative cursor-pointer hover:border-cyan-400 transition-all select-none">
+                                <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-cyan-400 rounded-full border-2 border-black"></div>
+                                <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-cyan-400 rounded-full border-2 border-black"></div>
+                                <div class="text-[9px] font-mono uppercase text-cyan-400 tracking-widest font-bold">Split Installment Ledger</div>
+                                <div class="text-xs font-semibold text-white mt-1">₹15,000 Fee Escalator</div>
+                                <div class="text-[9px] text-slate-400 mt-1.5 font-mono flex items-center justify-between">
+                                    <span>Reminders</span><span class="text-emerald-400">Automated WhatsApp</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Col 3: Render engines and logs -->
+                        <div class="flex flex-col gap-12">
+                            <!-- KieAI Asset Renderer Node -->
+                            <div onclick="selectNode('node-kieai-renderer')" id="node-kieai-renderer" class="w-52 p-3 rounded-lg border border-pink-500/40 bg-slate-950/90 shadow-[0_0_15px_rgba(244,63,94,0.1)] backdrop-blur-md relative cursor-pointer hover:border-pink-400 transition-all select-none">
+                                <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-pink-500 rounded-full border-2 border-black"></div>
+                                <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-pink-500 rounded-full border-2 border-black"></div>
+                                <div class="text-[9px] font-mono uppercase text-pink-400 tracking-widest font-bold">Rhythm Organic Publisher</div>
+                                <div class="text-xs font-semibold text-white mt-1">Content scheduling system</div>
+                                <div class="mt-2 flex items-center justify-between text-[9px] font-mono text-slate-400">
+                                    <span>Publishing Cap</span>
+                                    <span class="text-pink-400 bg-pink-950/30 px-1.5 rounded border border-pink-500/20 text-[9px] font-bold">16 videos/mo</span>
+                                </div>
+                            </div>
+
+                            <!-- Google Sheets Logging Node -->
+                            <div onclick="selectNode('node-sheets-logger')" id="node-sheets-logger" class="w-52 p-3 rounded-lg border border-emerald-500/30 bg-slate-950/80 shadow-xl backdrop-blur-md relative cursor-pointer hover:border-emerald-400 transition-all select-none">
+                                <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-emerald-500 rounded-full border-2 border-black"></div>
+                                <div class="text-[9px] font-mono uppercase text-emerald-400 tracking-widest font-bold">Offline Bidding Optimizer</div>
+                                <div class="text-xs font-semibold text-white mt-1">Meta CAPI & Google SmartBidding</div>
+                                <div class="text-[9px] text-slate-400 mt-1.5 font-mono flex items-center justify-between">
+                                    <span>Ad Target</span><span class="text-emerald-400 font-bold">Precise (High-Intent)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Collapsible side inspector or live thoughts panels -->
+                <div id="workflows-inspector" class="absolute right-4 top-16 bottom-4 w-80 bg-slate-950/95 border border-white/10 rounded-xl p-4 flex flex-col hidden z-20 shadow-2xl backdrop-blur-md space-y-3">
+                    <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                        <span class="text-xs font-mono font-bold uppercase text-cyan-400 tracking-widest">Live AI Thoughts Panel</span>
+                        <button onclick="toggleInspector()" class="text-slate-500 hover:text-white text-xs">✕</button>
+                    </div>
+                    <div class="flex-1 overflow-y-auto text-xs space-y-2.5 font-mono text-slate-300" id="thoughts-panel-content">
+                        <!-- Thoughts stream will inject here dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrations Marketplace Tab -->
+            <div id="viewport-integrations" class="space-y-4 hidden">
+                <div class="glass-panel rounded-xl p-6 bg-black/45 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="tech-heading text-lg font-bold text-white">Unified Integrations Marketplace</h2>
+                            <p class="text-xs text-slate-400">Register credentials, manage hooks, and configure API endpoints inside your secure local context.</p>
+                        </div>
+                        <input type="text" placeholder="Search 30+ integrations..." class="bg-black/60 border border-white/5 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500 text-slate-200 font-mono w-60">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Ollama Local -->
+                        <div class="bg-white/5 border border-white/5 rounded-xl p-4 space-y-3 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div class="w-10 h-10 rounded bg-purple-950 border border-purple-500/20 flex items-center justify-center font-bold text-white">OL</div>
+                                <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/20 px-1.5 py-0.5 rounded border border-emerald-500/20">CONNECTED</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Ollama / Local models</h4>
+                                <p class="text-[10px] text-slate-400 mt-1">DeepSeek-R1-14B hosted on local hardware port 11434.</p>
+                            </div>
+                        </div>
+
+                        <!-- KieAI API -->
+                        <div class="bg-white/5 border border-white/5 rounded-xl p-4 space-y-3 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div class="w-10 h-10 rounded bg-pink-950 border border-pink-500/20 flex items-center justify-center font-bold text-pink-400">KI</div>
+                                <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/20 px-1.5 py-0.5 rounded border border-emerald-500/20">CONNECTED</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">KieAI Visual API</h4>
+                                <p class="text-[10px] text-slate-400 mt-1">Direct graphic permution generation rendering engine.</p>
+                            </div>
+                        </div>
+
+                        <!-- Meta Conversion API -->
+                        <div class="bg-white/5 border border-white/5 rounded-xl p-4 space-y-3 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div class="w-10 h-10 rounded bg-fuchsia-950/60 border border-fuchsia-500/20 flex items-center justify-center font-bold text-fuchsia-400">CAPI</div>
+                                <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/20 px-1.5 py-0.5 rounded border border-emerald-500/20">ACTIVE</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Meta CAPI Router</h4>
+                                <p class="text-[10px] text-slate-400 mt-1">Dispatches conversions server-side instantly to lower auction CPCs.</p>
+                            </div>
+                        </div>
+
+                        <!-- Google sheets -->
+                        <div class="bg-white/5 border border-white/5 rounded-xl p-4 space-y-3 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div class="w-10 h-10 rounded bg-emerald-950 border border-emerald-500/20 flex items-center justify-center font-bold text-emerald-400">GS</div>
+                                <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/20 px-1.5 py-0.5 rounded border border-emerald-500/20">SYNCED</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Google Sheets API</h4>
+                                <p class="text-[10px] text-slate-400 mt-1">Logs automation metrics coordinates dynamically inside folders.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Console: System Webhook / Event Output Logs -->
+            <section class="h-44 glass-panel rounded-xl p-4 flex flex-col overflow-hidden bg-black/40 border border-white/5 shrink-0">
+                <div class="flex items-center justify-between mb-2 text-xs font-mono uppercase tracking-wider text-slate-400 shrink-0 select-none">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-ping"></span>
+                        Real-time Event pipeline logs
+                    </span>
+                    <span class="text-slate-500" id="pipeline-status-text">Asynchronous Value Lift Active</span>
+                </div>
+                <div id="terminal-stream" class="flex-1 bg-black/60 rounded border border-white/5 p-3 font-mono text-[10px] text-slate-300 overflow-y-auto space-y-1 selection:bg-cyan-500 selection:text-black">
+                    <div><span class="text-purple-400">[14:39:25]</span> <span class="text-cyan-400">[SYSTEM]</span> Adapted active identity node models to Antigravity AI specifications.</div>
+                    <div><span class="text-purple-400">[14:39:26]</span> <span class="text-indigo-400">[WEBHOOK]</span> Inbound comment hook: '@user: Mapped keyword GROWTH'. Initializing Comment-to-DM funnel.</div>
+                    <div><span class="text-purple-400">[14:39:28]</span> <span class="text-emerald-400">[AUTOPILOT]</span> Triggered interactive DM qualification route. Capture queue synchronized.</div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================== SECTION 5: AI COPILOT INTERACTION OVERLAY (Cmd+K) ================== -->
+    <div id="copilot-overlay" class="fixed inset-0 w-full h-full bg-black/70 z-[150] flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-2xl bg-slate-950 border border-cyan-500/30 rounded-xl shadow-[0_0_40px_rgba(6,182,212,0.15)] flex flex-col h-[420px] overflow-hidden glass-panel">
+            
+            <!-- Command input bar -->
+            <div class="h-12 border-b border-white/10 px-4 flex items-center gap-3 shrink-0">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="copilot-input" onkeydown="handleCopilotKeydown(event)" placeholder="Search Antigravity workspace, execute /actions, or ask copilot..." class="flex-1 bg-transparent text-sm focus:outline-none text-slate-200 font-mono">
+                <span class="text-[9px] font-mono bg-white/10 text-slate-400 px-1.5 py-0.5 rounded leading-none">ESC</span>
+            </div>
+
+            <!-- Suggestion chips or action list -->
+            <div class="p-3 bg-black/40 border-b border-white/5 shrink-0 flex flex-wrap gap-2 text-[10px] font-mono text-slate-400 select-none">
+                <span class="text-slate-500">Quick Actions:</span>
+                <span onclick="triggerCopilotQuickAction('/workflows')" class="bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded border border-white/5 cursor-pointer text-slate-300">/workflows (Switch to canvas)</span>
+                <span onclick="triggerCopilotQuickAction('/agent content')" class="bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded border border-white/5 cursor-pointer text-slate-300">/agent content (Inspect Content logs)</span>
+                <span onclick="triggerCopilotQuickAction('/simulate comment-dm')" class="bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded border border-white/5 cursor-pointer text-slate-300">/simulate comment-dm (Test Inbound)</span>
+            </div>
+
+            <!-- Chat display console -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-3 font-mono text-xs text-slate-300" id="copilot-chat-log">
+                <div class="flex items-start gap-2.5">
+                    <div class="w-5 h-5 rounded bg-cyan-600 flex items-center justify-center font-bold text-[9px] text-black text-xs shrink-0">Ω</div>
+                    <div class="bg-white/5 p-2.5 rounded-lg border border-white/5 max-w-[85%] text-slate-300">
+                        Welcome, Operator. I am **Antigravity AI Copilot**. We have active Comment-to-DM triggers mapped.
+                        Type a command (like `/simulate comment-dm`) or ask about the **Asynchronous Value Lift Engine** to review live execution traces.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== SECTION 6: AGENT DIAGNOSTICS SLIDE-OUT DRAWER ================== -->
+    <div id="agent-drawer" class="fixed right-0 top-0 bottom-0 w-96 bg-slate-950/98 border-l border-white/10 z-[120] flex flex-col p-6 shadow-2xl backdrop-blur-xl transform translate-x-full transition-transform duration-350 ease-out hidden">
+        <div class="flex items-center justify-between border-b border-white/5 pb-4">
+            <div class="flex items-center gap-2">
+                <div id="drawer-agent-badge" class="w-8 h-8 rounded bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs">SEO</div>
+                <div>
+                    <h3 id="drawer-agent-title" class="text-sm font-bold text-white tech-heading">SEO Agent</h3>
+                    <span id="drawer-agent-status" class="text-[9px] font-mono text-emerald-400">● LIVE RUNNING</span>
+                </div>
+            </div>
+            <button onclick="closeAgentDrawer()" class="text-slate-500 hover:text-white text-xs cursor-pointer">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto space-y-4 pt-4 text-xs font-mono" id="drawer-agent-content">
+            <!-- Details generated dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Tab routing variables
+        let currentTab = 'dashboard';
+        
+        // Element caching
+        const terminal = document.getElementById('terminal-stream');
+        const metricLeads = document.getElementById('live-kpi-leads');
+        const metricRoas = document.getElementById('live-kpi-roas');
+        const copilotOverlay = document.getElementById('copilot-overlay');
+        const copilotInput = document.getElementById('copilot-input');
+        const copilotChatLog = document.getElementById('copilot-chat-log');
+        const agentDrawer = document.getElementById('agent-drawer');
+        const thoughtsPanel = document.getElementById('workflows-inspector');
+        const thoughtsContent = document.getElementById('thoughts-panel-content');
+        
+        // Dynamic logging variables
+        const logChannels = ['[INSTAGRAM]', '[YOUTUBE_REPLY]', '[META_CAPI]', '[KIEAI_API]', '[GOOGLE_SHEETS]'];
+        const logs = [
+            "Inbound Reel comment trigger word 'GROWTH' matched successfully. Initializing DM Funnel loop.",
+            "Analyzing vector database profiles for context identity mapping: pgvector lookup executed.",
+            "Content AI generated dynamic DM sequence and qualification questions context parameters.",
+            "Interactive chat captured hashed email identity. Indexing record to PostgreSQL CRM Prospects.",
+            "Asynchronously dispatched value lift server-side conversion token to Meta CAPI pixel hooks.",
+            "Redistributed 15% active campaign allocations autonomously to optimize smart conversion values."
+        ];
+
+        // Custom Google Workspace OAuth popups controllers
+        function openGoogleOAuth() {
+            document.getElementById('google-oauth-modal').classList.remove('hidden');
+            document.getElementById('auth-error-msg').classList.add('hidden');
+        }
+
+        function closeGoogleOAuth() {
+            document.getElementById('google-oauth-modal').classList.add('hidden');
+        }
+
+        function selectGoogleAccount(email) {
+            document.getElementById('google-oauth-modal').classList.add('hidden');
+            const loading = document.getElementById('auth-loading-overlay');
+            const status = document.getElementById('auth-loading-status');
+            const term = document.getElementById('auth-loading-terminal');
+            
+            loading.classList.remove('hidden');
+            term.innerHTML = "<div>[SECURE] Ingress Google Workspace account handshakes...</div>";
+            
+            const logLines = [
+                `[SECURE] Verified user identity: ${email}`,
+                "[SECURE] Authorized via Workspace OAuth: rhythm-academy.com token context.",
+                "[SECURE] Handshake established. Fetching GKE cluster n8n & Opal secrets...",
+                "[SECURE] RAG pgvector memory databases validated.",
+                "[SECURE] Session initiated. Welcome back to Rhythm Academy!"
+            ];
+            
+            let i = 0;
+            const logInterval = setInterval(() => {
+                if(i < logLines.length) {
+                    const line = document.createElement('div');
+                    line.innerText = logLines[i];
+                    term.appendChild(line);
+                    status.innerText = logLines[i].replace('[SECURE] ', '');
+                    i++;
+                } else {
+                    clearInterval(logInterval);
+                    setTimeout(() => {
+                        const gateway = document.getElementById('auth-gateway');
+                        gateway.classList.add('opacity-0', 'scale-95');
+                        setTimeout(() => {
+                            gateway.classList.add('hidden');
+                            appendSystemLog(`Authenticated as ${email} via Google Workspace.`, '[SECURE]', 'text-emerald-400');
+                        }, 750);
+                    }, 500);
+                }
+            }, 550);
+        }
+
+        // Production-Grade Authentication Handshake Validator
+        function simulateOAuthLogin(method) {
+            const errorPanel = document.getElementById('auth-error-msg');
+            errorPanel.classList.add('hidden');
+
+            if (method === 'Opal & n8n Mesh') {
+                const opalToken = document.getElementById('auth-key-opal').value.trim();
+                const n8nKey = document.getElementById('auth-key-n8n').value.trim();
+
+                if (!opalToken.startsWith('sk-opal-') || !n8nKey.startsWith('n8n_api_key_')) {
+                    errorPanel.innerText = "Authentication Error: Credentials must match standard formats ('sk-opal-...' and 'n8n_api_key_...'). Please re-verify active secret keys.";
+                    errorPanel.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            const loading = document.getElementById('auth-loading-overlay');
+            const status = document.getElementById('auth-loading-status');
+            const term = document.getElementById('auth-loading-terminal');
+            
+            loading.classList.remove('hidden');
+            term.innerHTML = "<div>[SECURE] Establishing secure connection vectors...</div>";
+            
+            const logLines = [
+                `[SECURE] Connected handshake protocols via ${method}.`,
+                "[SECURE] Verifying token formats and permissions in secrets vault...",
+                "[SECURE] Vault verified. Pulling Rhythm Academy workflows and CRM maps...",
+                "[SECURE] pgvector RAG memory spaces decrypted successfully.",
+                "[SECURE] Handshake stabilized. Redirecting to workspace shell..."
+            ];
+            
+            let i = 0;
+            const logInterval = setInterval(() => {
+                if(i < logLines.length) {
+                    const line = document.createElement('div');
+                    line.innerText = logLines[i];
+                    term.appendChild(line);
+                    status.innerText = logLines[i].replace('[SECURE] ', '');
+                    i++;
+                } else {
+                    clearInterval(logInterval);
+                    
+                    // Decrypt complete animation transition
+                    setTimeout(() => {
+                        const gateway = document.getElementById('auth-gateway');
+                        gateway.classList.add('opacity-0', 'scale-95');
+                        setTimeout(() => {
+                            gateway.classList.add('hidden');
+                            appendSystemLog(`Security vault successfully decrypted via ${method.toUpperCase()} authentication.`, '[SECURE]', 'text-emerald-400');
+                        }, 750);
+                    }, 500);
+                }
+            }, 600);
+        }
+
+        // System state and keyboard mappings setup
+        window.addEventListener('keydown', function(event) {
+            // Cmd + K or Ctrl + K opens the Copilot COMMAND PANEL
+            if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+                event.preventDefault();
+                toggleCopilot();
+            }
+            // Escape key closes overlays
+            if (event.key === 'Escape') {
+                closeOverlays();
+            }
+            // G + Letters for Fast Page Routing (when not inside inputs)
+            if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                if (event.key === 'Spacebar' || event.key === ' ') {
+                    event.preventDefault();
+                    switchTab(currentTab === 'workflows' ? 'dashboard' : 'workflows');
+                }
+            }
+        });
+
+        // Launch Workspace and transition cinematic intro screen
+        function launchWorkspace() {
+            const hero = document.getElementById('cinematic-hero');
+            hero.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                hero.classList.add('hidden');
+            }, 750);
+            
+            // Log sync initialization
+            appendSystemLog("Antigravity OS workspace initialized. Comment-to-DM triggers synced.");
+        }
+
+        function backToIntro() {
+            const hero = document.getElementById('cinematic-hero');
+            hero.classList.remove('hidden');
+            setTimeout(() => {
+                hero.classList.remove('opacity-0', 'scale-95');
+                hero.classList.add('opacity-100', 'scale-100');
+            }, 50);
+        }
+
+        function toggleLandingSectionDetails() {
+            const infra = document.getElementById('landing-infrastructure');
+            infra.classList.toggle('hidden');
+        }
+
+        // Tab routing implementation
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.getElementById('viewport-dashboard').classList.add('hidden');
+            document.getElementById('viewport-workflows').classList.add('hidden');
+            document.getElementById('viewport-integrations').classList.add('hidden');
+            
+            document.getElementById('tab-btn-dashboard').className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer";
+            document.getElementById('tab-btn-workflows').className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer";
+            document.getElementById('tab-btn-integrations').className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer";
+
+            if(tabName === 'dashboard') {
+                document.getElementById('viewport-dashboard').classList.remove('hidden');
+                document.getElementById('tab-btn-dashboard').className = "px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer";
+            } else if(tabName === 'workflows') {
+                document.getElementById('viewport-workflows').classList.remove('hidden');
+                document.getElementById('tab-btn-workflows').className = "px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer";
+            } else if(tabName === 'integrations') {
+                document.getElementById('viewport-integrations').classList.remove('hidden');
+                document.getElementById('tab-btn-integrations').className = "px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer";
+            }
+            
+            appendSystemLog(`Navigated to active viewport: ${tabName.toUpperCase()}`);
+        }
+
+        // System core log writer
+        function appendSystemLog(message, channel = '[SYSTEM]', color = 'text-cyan-400') {
+            const time = new Date().toTimeString().split(' ')[0];
+            const logDiv = document.createElement('div');
+            logDiv.innerHTML = `<span class="text-purple-400">[${time}]</span> <span class="${color}">${channel}</span> ${message}`;
+            terminal.appendChild(logDiv);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Live processing terminal simulation loop
+        function prependLogSim() {
+            const channel = logChannels[Math.floor(Math.random() * logChannels.length)];
+            const text = logs[Math.floor(Math.random() * logs.length)];
+            
+            let color = "text-cyan-400";
+            if(channel.includes('KIEAI') || channel.includes('STUDIO')) color = "text-pink-400";
+            if(channel.includes('CAPI') || channel.includes('META')) color = "text-fuchsia-400";
+            if(channel.includes('SHEETS')) color = "text-emerald-400";
+            if(channel.includes('INSTAGRAM') || channel.includes('REPLY')) color = "text-indigo-400";
+
+            appendSystemLog(text, channel, color);
+
+            // Slightly modify workspace KPI parameters for realistic interactions
+            if(Math.random() > 0.4) {
+                let currentLeads = parseInt(metricLeads.innerText.replace(/,/g, ''));
+                metricLeads.innerText = (currentLeads + Math.floor(Math.random() * 3 + 1)).toLocaleString();
+            }
+            if(Math.random() > 0.85) {
+                let currentRoas = parseFloat(metricRoas.innerText.replace('x', ''));
+                let variance = (Math.random() * 0.04 - 0.02);
+                metricRoas.innerText = (currentRoas + variance).toFixed(2) + "x";
+            }
+        }
+        setInterval(prependLogSim, 3500);
+
+        // Content studio filling helper
+        function fillStudioBrief(topic) {
+            document.getElementById('studio-brief-input').value = topic;
+            appendSystemLog(`Filled Studio brief field with topic details: "${topic}"`);
+        }
+
+        // Simulate creative text permutation stream from Content AI Agent
+        function triggerContentStudioPipeline() {
+            const inputVal = document.getElementById('studio-brief-input').value;
+            if(!inputVal) {
+                alert("Please specify a brief parameter context first.");
+                return;
+            }
+
+            const output = document.getElementById('studio-output-box');
+            output.innerHTML = `<div class="text-pink-400 animate-pulse font-mono">[GEN_ENGINE] Requesting DeepSeek-R1 copy variations and KieAI visual prompts...</div>`;
+            
+            setTimeout(() => {
+                output.innerHTML = `
+<div class="space-y-2 font-mono text-[11px]">
+    <div class="text-cyan-400 uppercase font-bold">>>> ANTIGRAVITY GENERATION METADATA RESOLVED</div>
+    <div class="bg-white/5 p-2 rounded border border-white/5">
+        <strong class="text-fuchsia-400">Variation 1 (Comment-to-DM Inbound Funnel Copy):</strong><br>
+        <strong>Hook:</strong> Comment "GROWTH" to launch your autonomous multi-agent ad setups instantly.<br>
+        <strong>Interactive DM Questions:</strong> "Hi! Mapped your conversion. What email address should we sync your ad returns to?"<br>
+        <strong>Asynchronous Lift Action:</strong> Pushes server-side Meta CAPI click token asynchronously.
+    </div>
+</div>`;
+                appendSystemLog("Generated ad creative variations and visual specifications.", "[CONTENT_AI]", "text-pink-400");
+                appendSystemLog("Dispatched visual asset prompt specifications straight to KieAI Render loops.", "[AUTOMATION]", "text-emerald-400");
+            }, 1800);
+        }
+
+        // Direct campaign manual simulator actions
+        function simulateCampaignAction(action) {
+            if(action === 'scale') {
+                appendSystemLog("Fired asynchronous value lift event via Meta CAPI. Target ROAS benchmark adjusted.", "[META_CAPI]", "text-fuchsia-400");
+                let currentRoas = parseFloat(metricRoas.innerText.replace('x', ''));
+                metricRoas.innerText = (currentRoas + 0.18).toFixed(2) + "x";
+            } else if(action === 'pause') {
+                appendSystemLog("Executed system simulated traffic peak. Inbound comment webhooks processing high load.", "[WEBHOOK]", "text-indigo-400");
+            }
+        }
+
+        // Visual Drag & Drop monitor uploads simulator
+        const dropzone = document.getElementById('file-dropzone');
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.className = "bg-cyan-950/20 border border-dashed border-cyan-500/40 rounded-lg p-3 text-center cursor-pointer hover:bg-cyan-950/40 transition flex flex-col items-center justify-center py-5 node-drag-preview";
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.className = "bg-black/40 border border-dashed border-white/10 rounded-lg p-3 text-center cursor-pointer hover:border-cyan-500/30 hover:bg-white/5 transition flex flex-col items-center justify-center py-5";
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.className = "bg-black/40 border border-dashed border-white/10 rounded-lg p-3 text-center cursor-pointer hover:border-cyan-500/30 hover:bg-white/5 transition flex flex-col items-center justify-center py-5";
+            
+            const logBox = document.getElementById('file-monitor-log');
+            logBox.innerHTML = `<span class="text-cyan-400">[Local Daemon] Found leads_inbound.csv. Running RAG vector indexing...</span>`;
+            
+            setTimeout(() => {
+                logBox.innerHTML = `<span class="text-emerald-400">[SUCCESS] Vectorized 142 lead profiles to PostgreSQL long-term memory.</span>`;
+                appendSystemLog("Local monitor detected Leads file. Indexed 142 records via File Intelligence Agent.", "[FILE_INTEL]", "text-amber-500");
+            }, 1500);
+        });
+
+        // Interactive Workforce details slide-out drawer
+        function openAgentDrawer(agentId) {
+            agentDrawer.classList.remove('hidden');
+            setTimeout(() => {
+                agentDrawer.classList.remove('translate-x-full');
+            }, 50);
+
+            const title = document.getElementById('drawer-agent-title');
+            const badge = document.getElementById('drawer-agent-badge');
+            const status = document.getElementById('drawer-agent-status');
+            const content = document.getElementById('drawer-agent-content');
+
+            if(agentId === 'seo') {
+                badge.innerText = "SEO";
+                badge.className = "w-8 h-8 rounded bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs";
+                title.innerText = "SEO Agent Engine";
+                content.innerHTML = `
+<div>
+    <span class="text-slate-400 uppercase">ACTIVE TARGET CONTEXT</span>
+    <p class="text-white mt-1">1,200 Commercial high-intent keywords</p>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">DIAGNOSTICS & METRICS</span>
+    <div class="grid grid-cols-2 gap-2 mt-1">
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>CONFIDENCE:</div>
+            <div class="text-cyan-400 font-bold text-sm">94.2%</div>
+        </div>
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>TOKEN LOAD:</div>
+            <div class="text-cyan-400 font-bold text-sm">32k/min</div>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">RECENT EXECUTION LOGS</span>
+    <div class="bg-black/50 p-2 rounded border border-white/5 font-mono text-[10px] text-slate-400 space-y-1 mt-1 max-h-[200px] overflow-y-auto">
+        <div>[SEO][INFO] Analyzed SERP rankings parameters for target market.</div>
+        <div>[SEO][INFO] Auto-generated schema markup codes for priority landing pages.</div>
+        <div>[SEO][SUCCESS] Syncing technical SEO indexes straight to crawler.</div>
+    </div>
+</div>`;
+            } else if (agentId === 'sem') {
+                badge.innerText = "SEM";
+                badge.className = "w-8 h-8 rounded bg-purple-950 border border-purple-500/40 flex items-center justify-center text-purple-400 font-mono font-bold text-xs";
+                title.innerText = "SEM Bidding Agent";
+                content.innerHTML = `
+<div>
+    <span class="text-slate-400 uppercase">ACTIVE TARGET CONTEXT</span>
+    <p class="text-white mt-1">Google Ads / SmartCPC bid optimization loop</p>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">DIAGNOSTICS & METRICS</span>
+    <div class="grid grid-cols-2 gap-2 mt-1">
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>CONFIDENCE:</div>
+            <div class="text-purple-400 font-bold text-sm">91.8%</div>
+        </div>
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>CPC SAVINGS:</div>
+            <div class="text-purple-400 font-bold text-sm">-24.5%</div>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">RECENT LOGS</span>
+    <div class="bg-black/50 p-2 rounded border border-white/5 font-mono text-[10px] text-slate-400 space-y-1 mt-1 max-h-[200px] overflow-y-auto">
+        <div>[SEM][INFO] Analyzing keyword auction CPC trends.</div>
+        <div>[SEM][ACTION] Pruned 42 negative search terms from Active AdGroups.</div>
+        <div>[SEM][SUCCESS] Synchronized Google Smart Bidding offline CPA signals.</div>
+    </div>
+</div>`;
+            } else if (agentId === 'meta') {
+                badge.innerText = "AD";
+                badge.className = "w-8 h-8 rounded bg-fuchsia-950 border border-fuchsia-500/40 flex items-center justify-center text-fuchsia-400 font-mono font-bold text-xs";
+                title.innerText = "Meta Ads Optimizing Agent";
+                content.innerHTML = `
+<div>
+    <span class="text-slate-400 uppercase">ACTIVE ACTIONS</span>
+    <p class="text-white mt-1">Comment-to-DM Inbound conversion optimization</p>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">DIAGNOSTICS</span>
+    <div class="grid grid-cols-2 gap-2 mt-1">
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>CONFIDENCE:</div>
+            <div class="text-fuchsia-400 font-bold text-sm">89.4%</div>
+        </div>
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>ROAS LIFT:</div>
+            <div class="text-fuchsia-400 font-bold text-sm">+38.5% Lift</div>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">RECENT RECORDS</span>
+    <div class="bg-black/50 p-2 rounded border border-white/5 font-mono text-[10px] text-slate-400 space-y-1 mt-1 max-h-[200px] overflow-y-auto">
+        <div>[AD][INFO] Ingested user comment 'GROWTH' trigger.</div>
+        <div>[AD][ACTION] Dispatched server-side Meta CAPI conversion to lower CPM.</div>
+        <div>[AD][SUCCESS] Pixel identity matching verified. Value Lift Engine synced.</div>
+    </div>
+</div>`;
+            } else if (agentId === 'smm') {
+                badge.innerText = "SMM";
+                badge.className = "w-8 h-8 rounded bg-indigo-950 border border-indigo-500/40 flex items-center justify-center text-indigo-400 font-mono font-bold text-xs";
+                title.innerText = "Social Media Engagement Agent";
+                content.innerHTML = `
+<div>
+    <span class="text-slate-400 uppercase">ACTIVE INTEGRATIONS</span>
+    <p class="text-white mt-1">Instagram Comment Hook & WhatsApp Business</p>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">METRICS</span>
+    <div class="grid grid-cols-2 gap-2 mt-1">
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>CONFIDENCE:</div>
+            <div class="text-indigo-400 font-bold text-sm">95.0%</div>
+        </div>
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>CONVERSATIONS:</div>
+            <div class="text-indigo-400 font-bold text-sm">4,812/hr</div>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">LOGS</span>
+    <div class="bg-black/50 p-2 rounded border border-white/5 font-mono text-[10px] text-slate-400 space-y-1 mt-1 max-h-[200px] overflow-y-auto">
+        <div>[SMM][INFO] Parsing comment stream triggers under video posts.</div>
+        <div>[SMM][ACTION] Triggered automated DM qualification funnel for keyword 'GROWTH'.</div>
+    </div>
+</div>`;
+            } else if (agentId === 'content') {
+                badge.innerText = "GEN";
+                badge.className = "w-8 h-8 rounded bg-pink-950 border border-pink-500/40 flex items-center justify-center text-pink-400 font-mono font-bold text-xs";
+                title.innerText = "Content AI Studio Agent";
+                content.innerHTML = `
+<div>
+    <span class="text-slate-400 uppercase">ACTIVE TARGET MODELS</span>
+    <p class="text-white mt-1">Ollama local DeepSeek-R1 / OpenAI fallback</p>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">METRICS</span>
+    <div class="grid grid-cols-2 gap-2 mt-1">
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>CONFIDENCE:</div>
+            <div class="text-pink-400 font-bold text-sm">97.5%</div>
+        </div>
+        <div class="bg-white/5 p-2 rounded border border-white/5">
+            <div>TEMPLATES:</div>
+            <div class="text-pink-400 font-bold text-sm">34 Active</div>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="text-slate-400 uppercase">LOGS</span>
+    <div class="bg-black/50 p-2 rounded border border-white/5 font-mono text-[10px] text-slate-400 space-y-1 mt-1 max-h-[200px] overflow-y-auto">
+        <div>[CONTENT][INFO] Generating visual designs for Comment triggers promos.</div>
+        <div>[CONTENT][ACTION] Permuted KieAI visual layouts dimensions.</div>
+    </div>
+</div>`;
+            }
+        }
+
+        function closeAgentDrawer() {
+            agentDrawer.classList.add('translate-x-full');
+            setTimeout(() => {
+                agentDrawer.classList.add('hidden');
+            }, 350);
+        }
+
+        // Node Visual canvas selector and live reasoning panel loader
+        function selectNode(nodeId) {
+            thoughtsPanel.classList.remove('hidden');
+            const targetEl = document.getElementById(nodeId);
+            
+            // Soft border highlights on selected nodes
+            const container = document.getElementById('nodes-container');
+            Array.from(container.getElementsByClassName('border')).forEach(node => {
+                node.style.boxShadow = '';
+            });
+            targetEl.style.boxShadow = '0 0 20px rgba(0, 240, 255, 0.4)';
+
+            if(nodeId === 'node-tg-trigger') {
+                thoughtsContent.innerHTML = `
+<div class="space-y-3">
+    <div>
+        <div class="text-[10px] text-indigo-400 uppercase tracking-widest font-bold">WhatsApp Inbound Inflow Node</div>
+        <p class="text-white mt-1">Ingests real-time WhatsApp Business message threads, automatically parsing lead profiles.</p>
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Thought:</strong> Inbound WhatsApp lead initiated. Capturing phone number and prospect name dynamically to eliminate manual logging overhead.
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Plan:</strong> Parse message context -> Create CRM contact registry -> Queue for immediate direct advisor callback.
+    </div>
+</div>`;
+            } else if(nodeId === 'node-content-agent') {
+                thoughtsContent.innerHTML = `
+<div class="space-y-3">
+    <div>
+        <div class="text-[10px] text-purple-400 uppercase tracking-widest font-bold">Course Conversion AI Node</div>
+        <p class="text-white mt-1">Qualifies course vertical intent (3-Month, 6-Month, Diploma) and schedules Studio Visits.</p>
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Thought:</strong> Lead qualified as high-intent for Music Production Diploma. Pre-booking Studio Visit as primary conversion touchpoint.
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Plan:</strong> Dispatch calendar booking link -> Capture email identity -> Set RAG lead profile to HIGH_INTENT.
+    </div>
+</div>`;
+            } else if(nodeId === 'node-langgraph-memory') {
+                thoughtsContent.innerHTML = `
+<div class="space-y-3">
+    <div>
+        <div class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Split Installment Ledger Node</div>
+        <p class="text-white mt-1">Tracks student payments ledger and automates reminder escalations for ₹15,000 installments.</p>
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Thought:</strong> Outstanding payment alert detected for second installment of ₹15,000. Generating automated WhatsApp recovery message.
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Plan:</strong> Verify installment due date -> Compile secure payment link -> Deploy reminder loop, preventing delays.
+    </div>
+</div>`;
+            } else if(nodeId === 'node-kieai-renderer') {
+                thoughtsContent.innerHTML = `
+<div class="space-y-3">
+    <div>
+        <div class="text-[10px] text-pink-400 uppercase tracking-widest font-bold">Rhythm Organic Publisher Node</div>
+        <p class="text-white mt-1">Orchestrates Facebook & Instagram organic poster and video scheduling (16 videos/month).</p>
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Thought:</strong> Compiling monthly organic schedules for Music Production and Music School verticals (12/16 published).
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Plan:</strong> Format faculty-shot performance videos -> Queue posters -> Publish to Facebook & Instagram grids.
+    </div>
+</div>`;
+            } else if(nodeId === 'node-sheets-logger') {
+                thoughtsContent.innerHTML = `
+<div class="space-y-3">
+    <div>
+        <div class="text-[10px] text-emerald-400 uppercase tracking-widest font-bold">Offline Bidding Optimizer Node</div>
+        <p class="text-white mt-1">Syncs conversion value feedback signals to Meta CAPI and Google Ads to target high-value profiles.</p>
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Thought:</strong> Studio Visit completed or installment paid. Uploading conversion signals to train algorithm and filter low-intent leads.
+    </div>
+    <div class="bg-black/50 p-2 rounded border border-white/5">
+        <strong>$Plan:</strong> Compile lead attribution ID -> Fire server-side conversion token to Meta Ads API -> SmartBidding target updated.
+    </div>
+</div>`;
+            } else {
+                thoughtsContent.innerHTML = `
+<div class="space-y-3">
+    <div>
+        <div class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Central Event Router</div>
+        <p class="text-white mt-1">Mapping dynamic RAG vector storage lookups and relational data entries.</p>
+    </div>
+</div>`;
+            }
+        }
+
+        function toggleInspector() {
+            thoughtsPanel.classList.toggle('hidden');
+        }
+
+        // Add visual node dynamically to demonstrate pipeline modularity
+        let dynamicNodeCount = 0;
+        function addNewNode() {
+            if(dynamicNodeCount > 0) {
+                alert("Modular system node limit achieved for alpha execution.");
+                return;
+            }
+            dynamicNodeCount++;
+            
+            const container = document.getElementById('nodes-container');
+            const col = container.querySelector('.flex-col:last-child');
+            
+            const newNode = document.createElement('div');
+            newNode.id = "dynamic-injected-node";
+            newNode.className = "w-52 p-3 rounded-lg border border-cyan-500/40 bg-slate-950/90 shadow-[0_0_15px_rgba(6,182,212,0.1)] backdrop-blur-md relative cursor-pointer hover:border-cyan-400 transition-all select-none";
+            newNode.innerHTML = `
+<div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-cyan-500 rounded-full border-2 border-black"></div>
+<div class="text-[9px] font-mono uppercase text-cyan-400 tracking-widest font-bold">Slack Notification Sync</div>
+<div class="text-xs font-semibold text-white mt-1">Pipeline Alerts Injected</div>
+<div class="text-[9px] text-slate-500 mt-2 font-mono">Webhook status: Dynamic</div>`;
+            
+            col.appendChild(newNode);
+            appendSystemLog("Injected new webhook alerts node dynamically to visual workflow builder.", "[AUTOMATION]", "text-emerald-400");
+            
+            // Redraw mockup lines coordinates dynamically
+            const svg = document.getElementById('workflow-svg-connectors');
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M 1030 80 Q 1110 50 1200 65");
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "rgba(6, 182, 212, 0.4)");
+            path.setAttribute("stroke-width", "2");
+            svg.appendChild(path);
+        }
+
+        function resetFlowCanvas() {
+            thoughtsPanel.classList.add('hidden');
+            const node = document.getElementById('dynamic-injected-node');
+            if(node) node.remove();
+            dynamicNodeCount = 0;
+            appendSystemLog("Reset visual node layouts workspace matrices.", "[AUTOMATION]", "text-emerald-400");
+        }
+
+        // PERSISTENT AI COPILOT INTERACTION OVERLAY (Cmd+K)
+        function toggleCopilot() {
+            copilotOverlay.classList.toggle('hidden');
+            if(!copilotOverlay.classList.contains('hidden')) {
+                copilotInput.focus();
+            }
+        }
+
+        function closeOverlays() {
+            copilotOverlay.classList.add('hidden');
+            agentDrawer.classList.add('translate-x-full');
+            thoughtsPanel.classList.add('hidden');
+        }
+
+        // In-page log streamer helpers
+        function triggerCopilotQuickAction(action) {
+            copilotInput.value = action;
+            executeCopilotCommand(action);
+        }
+
+        function handleCopilotKeydown(event) {
+            if(event.key === 'Enter') {
+                const cmd = copilotInput.value;
+                if(cmd) {
+                    executeCopilotCommand(cmd);
+                }
+            }
+        }
+
+        function executeCopilotCommand(command) {
+            const log = document.getElementById('copilot-chat-log');
+            
+            const userMsg = document.createElement('div');
+            userMsg.className = "flex items-start gap-2.5 justify-end";
+            userMsg.innerHTML = `
+<div class="bg-cyan-950/40 p-2.5 rounded-lg border border-cyan-500/20 max-w-[85%] text-slate-300 text-right">
+    ${command}
+</div>
+<div class="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold text-[9px] text-slate-400 shrink-0">OP</div>`;
+            log.appendChild(userMsg);
+            copilotInput.value = '';
+
+            setTimeout(() => {
+                const response = document.createElement('div');
+                response.className = "flex items-start gap-2.5";
+                
+                let text = "Command parsed successfully. Mapped actions internally.";
+                if(command.startsWith('/workflows')) {
+                    switchTab('workflows');
+                    text = "Switched viewport directly to Visual Node Editor Canvas. Redrawing active DAG lines.";
+                } else if(command.startsWith('/agent content')) {
+                    openAgentDrawer('content');
+                    text = "Launched diagnostics drawer panel overlay for the Content AI Studio Agent.";
+                } else if(command.startsWith('/simulate comment-dm')) {
+                    switchTab('workflows');
+                    text = `
+<strong>[ANTIGRAVITY_THOUGHTS_EXECUTING_PIPELINE]</strong><br>
+Fired social comment trigger 'GROWTH' simulation:<br>
+1. <strong>Keyword match (Comment-to-DM):</strong> Ingested comment hook on Instagram Reel.<br>
+2. <strong>Interactive Qual:</strong> Spawned dynamic DM qualifications capturing user email context.<br>
+3. <strong>Asynchronous Lift Engine:</strong> Asynchronously compiled CAPI payload and pushed conversion value lift straight to active Meta ad set.
+`;
+                }
+
+                response.innerHTML = `
+<div class="w-5 h-5 rounded bg-cyan-600 flex items-center justify-center font-bold text-[9px] text-black shrink-0">Ω</div>
+<div class="bg-white/5 p-2.5 rounded-lg border border-white/5 max-w-[85%] text-slate-300">
+    ${text}
+</div>`;
+                log.appendChild(response);
+                log.scrollTop = log.scrollHeight;
+                appendSystemLog(`Copilot processed command: "${command}"`);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
