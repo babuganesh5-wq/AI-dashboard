@@ -1,0 +1,59 @@
+{
+  "mcpServers": {
+    "meta-graph-social": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-meta-graph"
+      ],
+      "env": {
+        "META_APP_ID": "your_meta_app_identifier_hash",
+        "META_APP_SECRET": "meta_app_secret_credential_hash",
+        "META_SYSTEM_USER_TOKEN": "antigravity_system_user_authentication_key",
+        "INSTAGRAM_BUSINESS_ACCOUNT_ID": "instagram_business_profile_id_hash",
+        "FACEBOOK_PAGE_ID": "facebook_page_identifier_hash"
+      }
+    },
+    "youtube-data-social": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-youtube"
+      ],
+      "env": {
+        "YOUTUBE_API_KEY": "your_google_youtube_developer_api_key_hash",
+        "YOUTUBE_CHANNEL_ID": "rhythm_academy_youtube_channel_identifier_hash"
+      }
+    },
+    "n8n-automation-bridge": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-n8n"
+      ],
+      "env": {
+        "N8N_API_KEY": "n8n_api_key_credential_hash",
+        "N8N_INSTANCE_URL": "https://n8n.rhythmacademy.com"
+      }
+    },
+    "postgres-memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://postgres:postgres@localhost:5432/antigravity_db"
+      ]
+    },
+    "google-sheets-ledger": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-google-sheets"
+      ],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "/Users/ganeshbabu/.gemini/antigravity/scratch/antigravity-ai/secrets.json",
+        "SPREADSHEET_ID": "your_rhythm_academy_ledger_spreadsheet_id_hash"
+      }
+    }
+  }
+}

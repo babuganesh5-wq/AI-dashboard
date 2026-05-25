@@ -142,3 +142,47 @@ class RhythmWhatsAppConnector:
 To feed Dynamic Value Lifts into ad account auctions and lower your Cost-Per-Acquisition (CPA):
 *   Exposes custom hooks in `backend/conversion_engine.py` connecting your leads milestones (Studio Visits completions, ₹15,000 split payments paid) to server-side endpoints.
 *   **Adoption Guidelines**: Bidding optimizers require the official `META_SYSTEM_USER_TOKEN` and Google Ads OAuth secrets to be populated in `.env` to route conversion tokens safely.
+
+---
+
+## 5. Social Handle Inflow: Meta Graph API MCP Server
+
+We integrate the Meta Graph API MCP server to allow cognitive agents to monitor views, parse high-intent comment trigger keywords, and initiate automated direct messages dynamically.
+
+### A. Installation Parameters
+The server runs system-wide using Node.js (`npx`):
+*   **Package**: `@modelcontextprotocol/server-meta-graph`
+
+### B. Exposed Tools & Capabilities
+*   `ig_get_media_comments`: Fetches comment feeds from active Reels and Posts.
+*   `ig_reply_to_comment`: Replies publicly to comments with marketing trigger hooks.
+*   `ig_send_direct_message`: Launches secure Comment-to-DM conversations.
+
+---
+
+## 6. YouTube Shorts & Video Comments: YouTube Data MCP Server
+
+We integrate the YouTube Data API MCP server to poll YouTube Shorts and video comments, analyze viewer engagement, and dispatch automated course links.
+
+### A. Installation Parameters
+The server runs system-wide using Node.js (`npx`):
+*   **Package**: `@modelcontextprotocol/server-youtube`
+
+### B. Exposed Tools & Capabilities
+*   `yt_get_video_comments`: Scans comment lists for trigger keywords (`LEAD`, `GROWTH`).
+*   `yt_insert_comment_reply`: Replies to comments on Shorts and videos.
+*   `yt_get_channel_analytics`: Pulls views, click-throughs, and retention statistics.
+
+---
+
+## 7. Workflow Handshakes: n8n Automation Bridge MCP Server
+
+To bridge the gap between social comments and immediate out-of-band follow-ups (WhatsApp, SMS), we deploy the n8n automation bridge.
+
+### A. Installation Parameters
+The server runs system-wide using Node.js (`npx`):
+*   **Package**: `@modelcontextprotocol/server-n8n`
+
+### B. Exposed Tools & Capabilities
+*   `trigger_workflow`: Fires pre-mapped n8n workflow triggers (such as SMS callbacks or Gmail registries) with custom data payloads.
+
