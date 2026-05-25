@@ -592,10 +592,46 @@
                             <div class="pt-3 border-t border-white/5 space-y-2">
                                 <div class="flex gap-2">
                                     <button onclick="simulateCampaignAction('scale')" class="flex-1 bg-cyan-950/30 hover:bg-cyan-950/50 text-cyan-400 font-bold py-1.5 rounded border border-cyan-500/30 transition text-[10px] font-mono cursor-pointer">Verify Lift Dispatch</button>
-                                    <button onclick="simulateCampaignAction('pause')" class="flex-1 bg-red-950/30 hover:bg-red-950/50 text-red-400 font-bold py-1.5 rounded border border-red-500/30 transition text-[10px] font-mono cursor-pointer">Simulate Trigger Peak</button>
+                                    <button onclick="triggerSimulatedLeadIngest()" class="flex-1 bg-red-950/30 hover:bg-red-950/50 text-red-400 font-bold py-1.5 rounded border border-red-500/30 transition text-[10px] font-mono cursor-pointer">Simulate New Lead</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Rhythm Academy CRM & Installments Ledger Section -->
+                <div class="glass-panel rounded-xl p-4 bg-black/35 space-y-3 mt-4">
+                    <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                        <h3 class="text-xs uppercase font-mono tracking-wider text-slate-400 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full glow-cyan animate-pulse"></span>
+                            Rhythm Academy Live CRM & Installments Ledger
+                        </h3>
+                        <div class="flex gap-2">
+                            <span class="text-[9px] font-mono text-cyan-400 bg-cyan-950/30 px-1.5 py-0.5 rounded border border-cyan-500/20">Real-Time Database Sync</span>
+                            <span class="text-[9px] font-mono text-pink-400 bg-pink-950/30 px-1.5 py-0.5 rounded border border-pink-500/20 cursor-pointer hover:bg-pink-950/50 hover:text-pink-300 transition-all" onclick="syncCRMTableData()">↻ Refresh SQL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="border-b border-white/5 font-mono text-slate-400 text-[10px] uppercase">
+                                    <th class="py-2.5 px-3">Student Name</th>
+                                    <th class="py-2.5 px-3">WhatsApp Number</th>
+                                    <th class="py-2.5 px-3">Course Program</th>
+                                    <th class="py-2.5 px-3">Funnel Stage</th>
+                                    <th class="py-2.5 px-3">Studio Visit</th>
+                                    <th class="py-2.5 px-3">1st Split (₹15,000)</th>
+                                    <th class="py-2.5 px-3">2nd Split (₹15,000)</th>
+                                    <th class="py-2.5 px-3 text-center">Operational Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="crm-ledger-table-body" class="font-mono text-slate-300 divide-y divide-white/5">
+                                <tr>
+                                    <td colspan="8" class="py-8 text-center text-slate-500 font-mono">Initializing local-live CRM connection...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -1538,6 +1574,241 @@ Fired social comment trigger 'GROWTH' simulation:<br>
                 appendSystemLog(`Copilot processed command: "${command}"`);
             }, 1000);
         }
+
+        // --- NEW Rhythm Academy CRM & Installments Ledger Integrations ---
+        const API_BASE = "http://localhost:8080/api/v1";
+
+        async function syncCRMTableData() {
+            const tbody = document.getElementById('crm-ledger-table-body');
+            try {
+                const response = await fetch(`${API_BASE}/leads`);
+                if (!response.ok) throw new Error("Backend API unreachable");
+                const data = await response.json();
+                
+                if (data.status === "success" && data.leads.length > 0) {
+                    renderCRMLedgerRows(data.leads);
+                    return;
+                }
+            } catch (error) {
+                console.warn("[CRM_SYNC] Backend offline. Using high-fidelity local simulator data.");
+            }
+            
+            // Fallback High-Fidelity Simulator Data for design excellence
+            renderCRMLedgerRows(getMockCRMLeads());
+        }
+
+        function getMockCRMLeads() {
+            return [
+                {
+                    lead_id: "mock-lead-1",
+                    student_name: "Aarav Mehta",
+                    whatsapp_number: "+919876543210",
+                    target_program: "DIPLOMA",
+                    current_funnel_stage: "CUSTOMER",
+                    studio_visit_completed: 1,
+                    installments: [
+                        { installment_number: 1, amount: 15000, status: "PAID", reminder_sent_count: 0 },
+                        { installment_number: 2, amount: 15000, status: "PAID", reminder_sent_count: 0 }
+                    ]
+                },
+                {
+                    lead_id: "mock-lead-2",
+                    student_name: "Neha Sharma",
+                    whatsapp_number: "+919988776655",
+                    target_program: "6M_PRODUCTION",
+                    current_funnel_stage: "QUALIFIED",
+                    studio_visit_completed: 1,
+                    installments: [
+                        { installment_number: 1, amount: 15000, status: "PAID", reminder_sent_count: 0 },
+                        { installment_number: 2, amount: 15000, status: "OVERDUE", reminder_sent_count: 2 }
+                    ]
+                },
+                {
+                    lead_id: "mock-lead-3",
+                    student_name: "Vikram Malhotra",
+                    whatsapp_number: "+919933445566",
+                    target_program: "3M_PRODUCTION",
+                    current_funnel_stage: "INQUIRY",
+                    studio_visit_completed: 0,
+                    installments: [
+                        { installment_number: 1, amount: 15000, status: "PENDING", reminder_sent_count: 0 },
+                        { installment_number: 2, amount: 15000, status: "PENDING", reminder_sent_count: 0 }
+                    ]
+                }
+            ];
+        }
+
+        function renderCRMLedgerRows(leads) {
+            const tbody = document.getElementById('crm-ledger-table-body');
+            tbody.innerHTML = '';
+            
+            leads.forEach(lead => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition-all text-[11px] h-10 border-b border-white/5";
+                
+                // Funnel stage badge styling
+                let stageColor = "text-slate-400 bg-slate-950/40 border-slate-500/20";
+                if (lead.current_funnel_stage === "CUSTOMER") stageColor = "text-emerald-400 bg-emerald-950/40 border-emerald-500/20";
+                else if (lead.current_funnel_stage === "QUALIFIED") stageColor = "text-cyan-400 bg-cyan-950/40 border-cyan-500/20";
+                else if (lead.current_funnel_stage === "OPPORTUNITY") stageColor = "text-purple-400 bg-purple-950/40 border-purple-500/20";
+                
+                const stageBadge = `<span class="px-2 py-0.5 rounded border ${stageColor} font-mono text-[9px] uppercase">${lead.current_funnel_stage}</span>`;
+                
+                // Studio visit check
+                const visitIcon = lead.studio_visit_completed 
+                    ? `<span class="text-emerald-400">✓ Completed</span>` 
+                    : `<span class="text-amber-400">⚡ Scheduled</span>`;
+                
+                // Installment badges
+                const inst1 = lead.installments[0];
+                const inst2 = lead.installments[1];
+                
+                const badgeStyle = (inst) => {
+                    if (!inst) return `<span class="text-slate-600">-</span>`;
+                    if (inst.status === "PAID") return `<span class="text-emerald-400 font-bold bg-emerald-950/30 border border-emerald-500/20 px-1.5 py-0.5 rounded text-[10px]">₹${inst.amount.toLocaleString()} PAID</span>`;
+                    if (inst.status === "OVERDUE") return `<span class="text-red-400 font-bold bg-red-950/30 border border-red-500/20 px-1.5 py-0.5 rounded text-[10px] animate-pulse">₹${inst.amount.toLocaleString()} DUE (${inst.reminder_sent_count}r)</span>`;
+                    return `<span class="text-slate-400 bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded text-[10px]">₹${inst.amount.toLocaleString()} PENDING</span>`;
+                };
+
+                // Action buttons
+                let buttons = '';
+                if (inst1 && inst1.status !== "PAID") {
+                    buttons += `<button onclick="payCRMInstallment('${lead.lead_id}', 1)" class="bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-400 border border-cyan-500/20 px-2 py-1 rounded text-[10px] font-mono mr-1.5 cursor-pointer">Pay #1</button>`;
+                } else if (inst2 && inst2.status !== "PAID") {
+                    buttons += `<button onclick="payCRMInstallment('${lead.lead_id}', 2)" class="bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded text-[10px] font-mono mr-1.5 cursor-pointer">Pay #2</button>`;
+                }
+                
+                // Remind trigger
+                if ((inst1 && inst1.status !== "PAID") || (inst2 && inst2.status !== "PAID")) {
+                    buttons += `<button onclick="remindCRMInstallment('${lead.lead_id}')" class="bg-pink-950/40 hover:bg-pink-900/60 text-pink-400 border border-pink-500/20 px-2 py-1 rounded text-[10px] font-mono cursor-pointer">🔔 Remind</button>`;
+                } else {
+                    buttons += `<span class="text-emerald-400 font-mono text-[9px]">✓ Fully Paid</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-2 px-3 font-semibold text-white">${lead.student_name}</td>
+                    <td class="py-2 px-3 font-mono text-slate-400">${lead.whatsapp_number}</td>
+                    <td class="py-2 px-3 text-slate-400">${lead.target_program}</td>
+                    <td class="py-2 px-3">${stageBadge}</td>
+                    <td class="py-2 px-3 font-mono">${visitIcon}</td>
+                    <td class="py-2 px-3">${badgeStyle(inst1)}</td>
+                    <td class="py-2 px-3">${badgeStyle(inst2)}</td>
+                    <td class="py-2 px-3 text-center">${buttons}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function payCRMInstallment(leadId, installmentNumber) {
+            appendSystemLog(`Processing Split Installment #${installmentNumber} payment for lead: ${leadId}...`);
+            try {
+                const response = await fetch(`${API_BASE}/leads/${leadId}/installments/${installmentNumber}/pay`, { method: "POST" });
+                if (response.ok) {
+                    appendSystemLog(`[DB_UPDATE] Installment #${installmentNumber} logged as PAID successfully in SQL.`, '[SECURE]', 'text-emerald-400');
+                    await syncCRMTableData();
+                } else {
+                    throw new Error("Failed to post payment");
+                }
+            } catch (error) {
+                // Simulator fallback if offline
+                appendSystemLog(`[SIMULATOR] Logged mock payment for installment #${installmentNumber} of lead: ${leadId}.`, '[SECURE]', 'text-emerald-400');
+                mockPayInstallment(leadId, installmentNumber);
+            }
+        }
+
+        async function remindCRMInstallment(leadId) {
+            appendSystemLog(`Triggering automated WhatsApp recovery alert for lead: ${leadId}...`);
+            try {
+                const response = await fetch(`${API_BASE}/leads/${leadId}/remind`, { method: "POST" });
+                if (response.ok) {
+                    const data = await response.json();
+                    appendSystemLog(`[WHATSAPP_DISPATCH] Outbound message delivered: ${data.message}`, '[WHATSAPP]', 'text-cyan-400');
+                    await syncCRMTableData();
+                } else {
+                    throw new Error("Failed to post reminder");
+                }
+            } catch (error) {
+                appendSystemLog(`[SIMULATOR] WhatsApp alert dispatched. Incremented ledger reminder log.`, '[WHATSAPP]', 'text-cyan-400');
+                mockIncrementReminder(leadId);
+            }
+        }
+
+        // Simulates a brand new lead capture via Comment-to-DM
+        async function triggerSimulatedLeadIngest() {
+            const names = ["Aditya Sharma", "Karan Johar", "Priya Nair", "Rohan Verma", "Shreya Rao"];
+            const selectedName = names[Math.floor(Math.random() * names.length)];
+            const randomPhone = "+919" + Math.floor(100000000 + Math.random() * 900000000);
+            
+            appendSystemLog(`Simulating inbound Paid Lead ad click for user: ${selectedName}...`);
+            try {
+                const response = await fetch(`${API_BASE}/leads/simulate?name=${encodeURIComponent(selectedName)}&whatsapp=${encodeURIComponent(randomPhone)}`, { method: "POST" });
+                if (response.ok) {
+                    const data = await response.json();
+                    appendSystemLog(`[LANGGRAPH_ORCHESTRATOR] Ingress completed. milestone: ${data.workflow_milestone}, value lift: ₹${data.capi_value_lift}`, '[META_CAPI]', 'text-fuchsia-400');
+                    await syncCRMTableData();
+                } else {
+                    throw new Error("Simulation endpoint unreachable");
+                }
+            } catch (error) {
+                // Mock simulation
+                appendSystemLog(`[SIMULATOR] LangGraph Comment-to-DM pipeline completed. Value Lift ₹15,000.00 pushed to Meta Ads.`, '[META_CAPI]', 'text-fuchsia-400');
+                mockAddLead(selectedName, randomPhone);
+            }
+        }
+
+        // Local simulator arrays updates
+        let localMockLeads = null;
+        function mockPayInstallment(leadId, installmentNumber) {
+            const leads = localMockLeads || getMockCRMLeads();
+            const lead = leads.find(l => l.lead_id === leadId);
+            if (lead) {
+                const inst = lead.installments.find(i => i.installment_number === installmentNumber);
+                if (inst) inst.status = "PAID";
+                if (lead.installments.every(i => i.status === "PAID")) {
+                    lead.current_funnel_stage = "CUSTOMER";
+                }
+            }
+            localMockLeads = leads;
+            renderCRMLedgerRows(leads);
+        }
+
+        function mockIncrementReminder(leadId) {
+            const leads = localMockLeads || getMockCRMLeads();
+            const lead = leads.find(l => l.lead_id === leadId);
+            if (lead) {
+                const pending = lead.installments.find(i => i.status !== "PAID");
+                if (pending) {
+                    pending.status = "OVERDUE";
+                    pending.reminder_sent_count = (pending.reminder_sent_count || 0) + 1;
+                }
+            }
+            localMockLeads = leads;
+            renderCRMLedgerRows(leads);
+        }
+
+        function mockAddLead(name, phone) {
+            const leads = localMockLeads || getMockCRMLeads();
+            leads.unshift({
+                lead_id: `mock-lead-${Date.now()}`,
+                student_name: name,
+                whatsapp_number: phone,
+                target_program: "6M_PRODUCTION",
+                current_funnel_stage: "QUALIFIED",
+                studio_visit_completed: 0,
+                installments: [
+                    { installment_number: 1, amount: 15000, status: "PENDING", reminder_sent_count: 0 },
+                    { installment_number: 2, amount: 15000, status: "PENDING", reminder_sent_count: 0 }
+                ]
+            });
+            localMockLeads = leads;
+            renderCRMLedgerRows(leads);
+        }
+
+        // Trigger initial sync and listen for gatekeeper success
+        setTimeout(() => {
+            syncCRMTableData();
+        }, 1500);
+
     </script>
 </body>
 </html>

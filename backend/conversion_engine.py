@@ -151,3 +151,15 @@ class AdAlgorithmOptimizer:
             "match_click_id": click_id,
             "timestamp": int(time.time())
         }
+
+    async def fire_meta_capi_event(self, lead_data: Dict[str, Any], event_name: str) -> Dict[str, Any]:
+        """
+        Dispatches standard Meta Conversions API events.
+        """
+        # Call fire_meta_capi_lift_event with a standard 180 seconds fallback response speed
+        return await self.fire_meta_capi_lift_event(
+            lead_data=lead_data,
+            event_type=event_name,
+            response_speed=180.0
+        )
+

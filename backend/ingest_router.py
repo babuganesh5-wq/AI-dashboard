@@ -100,9 +100,126 @@ def normalize_payload(platform: str, payload: dict) -> Optional[InboundSocialEve
                         keyword_matched=matched_keyword,
                         attribution_click_id=click_id
                     )
+                    click_id = value.get("metadata", {}).get("fbclid", None)
+                    return InboundSocialEvent(
+                        platform="INSTAGRAM_COMMENT",
+                        sender_platform_id=sender,
+                        text_content=text,
+                        keyword_matched=matched_keyword,
+                        attribution_click_id=click_id
+                    )
         elif platform == "YOUTUBE":
             # Parsing PubSubHubbub subscription tags
             pass
     except Exception:
         pass
     return None
+
+# --- NEW Rhythm Academy CRM & Live Telemetry APIs ---
+
+@router.get("/leads")
+async def get_all_leads():
+    """Retrieves all Rhythm Academy leads, installments, and program statuses from SQL."""
+    from backend.db_manager import db_manager
+    try:
+        leads = db_manager.get_all_leads_with_details()
+        # For each lead, append its installments from the ledger
+        with db_manager.get_connection() as conn:
+            for lead in leads:
+                cursor = conn.execute(
+                    "SELECT installment_id, installment_number, amount, status, due_date, reminder_sent_count FROM Rhythm_Installments_Ledger WHERE lead_id = ? ORDER BY installment_number",
+                    (lead["lead_id"],)
+                )
+                lead["installments"] = [dict(row) for row in cursor.fetchall()]
+        return {"status": "success", "leads": leads}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/leads/simulate")
+async def simulate_inbound_lead(
+    name: str = "Tushar Dev", 
+    whatsapp: str = "919988776655", 
+    text: str = "I want to enroll in the music PRODUCTION course!",
+    fbclid: str = "fb_click_id_99999"
+):
+    """
+    Simulates an inbound ad click / WhatsApp message.
+    Executes the entire multi-agent LangGraph workflow.
+    """
+    from backend.workflow import AgentWorkflowState
+    try:
+        workflow = AgentWorkflowState()
+        event = InboundSocialEvent(
+            platform="WHATSAPP",
+            sender_platform_id=whatsapp,
+            text_content=text,
+            attribution_click_id=fbclid
+        )
+        
+        initial_state = {
+            "event": event,
+            "sender_name": name
+        }
+        
+        final_state = await workflow.runtime.ainvoke(initial_state)
+        
+        # Pull latest details for return
+        from backend.db_manager import db_manager
+        prospect = db_manager.get_prospect_by_identity("WHATSAPP", whatsapp)
+        
+        return {
+            "status": "success",
+            "message": "Full LangGraph pipeline executed successfully.",
+            "workflow_milestone": final_state.get("milestone"),
+            "capi_value_lift": final_state.get("value_lift_metrics", {}).get("value_lifted"),
+            "prospect_id": prospect["prospect_id"] if prospect else None
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/leads/{lead_id}/installments/{number}/pay")
+async def pay_split_installment(lead_id: str, number: int):
+    """Processes split installment payments, promoting student profiles to CUSTOMER."""
+    from backend.db_manager import db_manager
+    with db_manager.get_connection() as conn:
+        cursor = conn.execute(
+            "SELECT installment_id FROM Rhythm_Installments_Ledger WHERE lead_id = ? AND installment_number = ?",
+            (lead_id, number)
+        )
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Installment record not found.")
+        
+        db_manager.update_installment_status(row["installment_id"], "PAID")
+        return {"status": "success", "message": f"Installment #{number} paid successfully."}
+
+@router.post("/leads/{lead_id}/remind")
+async def send_whatsapp_installment_reminder(lead_id: str):
+    """Outbounds automated WhatsApp split fee recovery warnings and logs reminders counts."""
+    from backend.db_manager import db_manager
+    from backend.workflow import RhythmWhatsAppClient
+    
+    lead = db_manager.get_lead(lead_id)
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead not found.")
+        
+    with db_manager.get_connection() as conn:
+        cursor = conn.execute(
+            "SELECT installment_id, amount FROM Rhythm_Installments_Ledger WHERE lead_id = ? AND status != 'PAID'",
+            (lead_id,)
+        )
+        rows = [dict(r) for r in cursor.fetchall()]
+        if not rows:
+            return {"status": "success", "message": "No pending installments found."}
+            
+        # Send WhatsApp alert for the first pending installment
+        target = rows[0]
+        await RhythmWhatsAppClient.send_installment_escalation(
+            whatsapp_number=lead["whatsapp_number"],
+            student_id=lead["prospect_id"],
+            balance=target["amount"]
+        )
+        
+        db_manager.increment_installment_reminder(target["installment_id"])
+        return {"status": "success", "message": f"Reminder dispatched for ₹{target['amount']} balance."}
+
