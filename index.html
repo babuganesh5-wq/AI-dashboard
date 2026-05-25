@@ -316,6 +316,10 @@
                 <span>INFERENCE SPEC:</span>
                 <span class="text-purple-400 font-bold">Ollama / DeepSeek-R1</span>
             </div>
+            <button onclick="startLivelyClientDemo()" class="flex items-center gap-1.5 text-pink-400 bg-pink-950/30 hover:bg-pink-950/50 hover:text-pink-300 px-3 py-1 rounded border border-pink-500/30 transition-all font-semibold font-mono cursor-pointer shadow-lg shadow-pink-600/10">
+                <svg class="w-3.5 h-3.5 fill-current animate-pulse" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <span>PLAY CLIENT DEMO</span>
+            </button>
             <div class="flex items-center gap-2 text-cyan-400 bg-cyan-950/20 px-2 py-1 rounded border border-cyan-500/20">
                 <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
                 <span>MESH: ONLINE</span>
@@ -1802,6 +1806,195 @@ Fired social comment trigger 'GROWTH' simulation:<br>
             });
             localMockLeads = leads;
             renderCRMLedgerRows(leads);
+        }
+
+        // --- NEW Rhythm Academy Lively Client Guided Demo ---
+        let activeDemoStep = 0;
+        let demoOverlay = null;
+        let highlightRing = null;
+
+        function startLivelyClientDemo() {
+            if (document.getElementById('demo-presentation-overlay')) {
+                cleanupDemoPresentation();
+                return;
+            }
+            activeDemoStep = 0;
+            createDemoUI();
+            executeNextDemoStep();
+        }
+
+        function createDemoUI() {
+            // Create presentation overlay card
+            demoOverlay = document.createElement('div');
+            demoOverlay.id = 'demo-presentation-overlay';
+            demoOverlay.className = "fixed bottom-6 right-6 w-96 p-4 rounded-xl glass-panel bg-black/85 border border-pink-500/40 z-[300] font-mono text-slate-200 text-xs shadow-2xl shadow-pink-500/10 space-y-3 transition-all duration-300 scale-95 opacity-0";
+            document.body.appendChild(demoOverlay);
+            
+            // Trigger animation fade in
+            setTimeout(() => {
+                demoOverlay.classList.remove('opacity-0', 'scale-95');
+                demoOverlay.classList.add('opacity-100', 'scale-100');
+            }, 100);
+
+            // Create glowing highlight ring overlay
+            highlightRing = document.createElement('div');
+            highlightRing.id = 'demo-highlight-ring';
+            highlightRing.className = "fixed pointer-events-none border-2 border-pink-500 rounded-lg z-[250] shadow-[0_0_20px_rgba(236,72,153,0.6)] animate-pulse transition-all duration-500 opacity-0";
+            document.body.appendChild(highlightRing);
+        }
+
+        function cleanupDemoPresentation() {
+            if (demoOverlay) {
+                demoOverlay.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    if (demoOverlay) demoOverlay.remove();
+                    if (highlightRing) highlightRing.remove();
+                    demoOverlay = null;
+                    highlightRing = null;
+                    appendSystemLog("Client Presentation Demo completed.", "[DEMO_ENGINE]", "text-emerald-400");
+                }, 300);
+            }
+        }
+
+        function positionHighlightRing(elementId, padding = 4) {
+            const el = document.getElementById(elementId);
+            if (!el) {
+                cleanupHighlightRing();
+                return;
+            }
+            const rect = el.getBoundingClientRect();
+            highlightRing.style.left = `${rect.left - padding}px`;
+            highlightRing.style.top = `${rect.top - padding}px`;
+            highlightRing.style.width = `${rect.width + padding * 2}px`;
+            highlightRing.style.height = `${rect.height + padding * 2}px`;
+            highlightRing.style.opacity = 1;
+            
+            // Scroll to view if out of viewport
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function updateDemoText(title, text, progress) {
+            if (!demoOverlay) return;
+            demoOverlay.innerHTML = `
+                <div class="flex items-center justify-between border-b border-pink-500/20 pb-2">
+                    <span class="text-pink-400 font-bold tracking-wider flex items-center gap-1.5 font-sans">
+                        <svg class="w-3.5 h-3.5 fill-current animate-pulse text-pink-500" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        RHYTHM ACADEMY CLIENT TOUR
+                    </span>
+                    <span class="text-[9px] bg-pink-950/40 text-pink-400 border border-pink-500/30 px-1.5 py-0.5 rounded">${progress}</span>
+                </div>
+                <div class="space-y-1.5">
+                    <h4 class="font-bold text-white text-[12px]">${title}</h4>
+                    <p class="text-slate-400 leading-relaxed text-[10px]">${text}</p>
+                </div>
+                <div class="flex justify-between items-center pt-2 text-[9px] border-t border-white/5">
+                    <button onclick="cleanupDemoPresentation()" class="text-slate-500 hover:text-slate-300 font-bold transition">✕ Close Tour</button>
+                    <span class="text-pink-400 animate-pulse font-bold">Executing actions...</span>
+                </div>
+            `;
+        }
+
+        const demoSteps = [
+            {
+                title: "1. Secure OpenSec Auth Gatekeeper",
+                text: "Access to the operating system is locked to prevent credential leaks. Authenticating now via a secure Google Workspace OAuth handshake...",
+                action: async () => {
+                    const gateway = document.getElementById('auth-gateway');
+                    if (gateway.classList.contains('hidden')) {
+                        gateway.classList.remove('hidden', 'opacity-0');
+                    }
+                    await new Promise(r => setTimeout(r, 1000));
+                    openGoogleOAuth();
+                    positionHighlightRing('google-oauth-modal', 6);
+                    await new Promise(r => setTimeout(r, 1500));
+                    selectGoogleAccount('admin@rhythmacademy.com');
+                }
+            },
+            {
+                title: "2. Decrypted Operations Hub Dashboard",
+                text: "Welcome back! The workspace decrypts dynamically. Live metrics rows now track Course Blended ROAS, Lead Resolutions queues, and active Double Batches schedules.",
+                action: async () => {
+                    cleanupHighlightRing();
+                    switchTab('dashboard');
+                    await new Promise(r => setTimeout(r, 1000));
+                    positionHighlightRing('live-kpi-roas', 4);
+                }
+            },
+            {
+                title: "3. Live SQL CRM & Split Installments Ledger Grid",
+                text: "Here is the heart of the cash flow recovery node: our relational CRM grid table tracking target programs, scheduled visits, and split ₹15k course payments.",
+                action: async () => {
+                    positionHighlightRing('crm-ledger-table-body', 6);
+                }
+            },
+            {
+                title: "4. Automated Inbound Lead Capture (LangGraph)",
+                text: "Let's simulate a new lead! The Comment-to-DM system automatically registers the contact in SQLite, schedules a Studio Visit, and schedules two split installments.",
+                action: async () => {
+                    positionHighlightRing('live-kpi-leads', 4);
+                    await triggerSimulatedLeadIngest();
+                    await new Promise(r => setTimeout(r, 1500));
+                    positionHighlightRing('crm-ledger-table-body', 6);
+                }
+            },
+            {
+                title: "5. Split Payments Relational Recovery",
+                text: "When a student pays their first ₹15k installment, a click updates SQLite instantly. Watch the status transition to green ₹15,000 PAID and upgrade their CRM stage!",
+                action: async () => {
+                    const tbody = document.getElementById('crm-ledger-table-body');
+                    const payBtn = tbody.querySelector("button") || document.querySelector("button:has-text('Pay #1')");
+                    if (payBtn) {
+                        const rect = payBtn.getBoundingClientRect();
+                        highlightRing.style.left = `${rect.left - 4}px`;
+                        highlightRing.style.top = `${rect.top - 4}px`;
+                        highlightRing.style.width = `${rect.width + 8}px`;
+                        highlightRing.style.height = `${rect.height + 8}px`;
+                        highlightRing.style.opacity = 1;
+                        await new Promise(r => setTimeout(r, 1500));
+                        payBtn.click();
+                    }
+                }
+            },
+            {
+                title: "6. WhatsApp Billing Alerts & Conversion Lifts",
+                text: "For outstanding splits, clicking 'Remind' outbounds Meta alerts and logs remind tallies in SQL. High-intent conversion weights are synced with ad auctions. Tour complete!",
+                action: async () => {
+                    const tbody = document.getElementById('crm-ledger-table-body');
+                    const remindBtn = tbody.querySelector("button:has-text('Remind')") || tbody.querySelector("button:has-text('Pay #2')") || tbody.querySelector("button");
+                    if (remindBtn) {
+                        const rect = remindBtn.getBoundingClientRect();
+                        highlightRing.style.left = `${rect.left - 4}px`;
+                        highlightRing.style.top = `${rect.top - 4}px`;
+                        highlightRing.style.width = `${rect.width + 8}px`;
+                        highlightRing.style.height = `${rect.height + 8}px`;
+                        highlightRing.style.opacity = 1;
+                        await new Promise(r => setTimeout(r, 1500));
+                        remindBtn.click();
+                    }
+                }
+            }
+        ];
+
+        async function executeNextDemoStep() {
+            if (activeDemoStep >= demoSteps.length) {
+                cleanupDemoPresentation();
+                return;
+            }
+            const step = demoSteps[activeDemoStep];
+            updateDemoText(step.title, step.text, `${activeDemoStep + 1}/${demoSteps.length}`);
+            
+            try {
+                await step.action();
+            } catch (e) {
+                console.error(e);
+            }
+            
+            activeDemoStep++;
+            setTimeout(executeNextDemoStep, 5000);
+        }
+
+        function cleanupHighlightRing() {
+            if (highlightRing) highlightRing.style.opacity = 0;
         }
 
         // Trigger initial sync and listen for gatekeeper success
