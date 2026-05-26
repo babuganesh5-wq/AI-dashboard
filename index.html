@@ -1308,6 +1308,7 @@
                         setTimeout(() => {
                             gateway.classList.add('hidden');
                             appendSystemLog(`Authenticated as ${email} via Google Workspace.`, '[SECURE]', 'text-emerald-400');
+                            launchWorkspace();
                         }, 750);
                     }, 500);
                 }
@@ -1363,6 +1364,7 @@
                         setTimeout(() => {
                             gateway.classList.add('hidden');
                             appendSystemLog(`Security vault successfully decrypted via ${method.toUpperCase()} authentication.`, '[SECURE]', 'text-emerald-400');
+                            launchWorkspace();
                         }, 750);
                     }, 500);
                 }
