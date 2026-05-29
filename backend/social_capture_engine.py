@@ -172,6 +172,10 @@ class SocialCaptureEngine:
                     target_program="6M_PRODUCTION",
                     source=f"SOCIAL_{platform}"
                 )
+
+                # Record split installments (₹15,000 + ₹15,000) inside ledger
+                db_manager.record_installment(lead_id=lead_id, installment_number=1, amount=15000.00, due_days=1)
+                db_manager.record_installment(lead_id=lead_id, installment_number=2, amount=15000.00, due_days=30)
             except Exception as e:
                 print(f"[CAPTURE_ENGINE] CRM creation warning: {e}")
 

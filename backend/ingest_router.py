@@ -376,3 +376,19 @@ async def get_top_performers(limit: int = 10):
         return {"status": "success", "top_performers": top, "total": len(top)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/crm/followup")
+async def trigger_crm_followup_loops():
+    """
+    Triggers the relentless CRM follow-up loops:
+    1. Social Auto-DM Nudges for non-responsive commenters.
+    2. WhatsApp Studio Visit reminders for unqualified inquiries.
+    3. Installment reminders for pending split ledger payments.
+    """
+    from backend.crm_followup_engine import crm_followup_engine
+    try:
+        results = await crm_followup_engine.execute_all_followup_loops()
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
