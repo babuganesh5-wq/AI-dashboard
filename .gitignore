@@ -34,3 +34,8 @@ __pycache__/
 *.pyd
 .pytest_cache/
 .mypy_cache/
+
+# Local backups and databases
+/backup_safe/
+/antigravity.db
+
