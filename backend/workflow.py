@@ -251,3 +251,138 @@ class AgentWorkflowState:
         state["value_lift_metrics"] = lift_results
         return state
 
+    # --- Social Capture Workflow Nodes ---
+
+    async def social_comment_capture_node(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Processes an inbound social media comment through the capture pipeline.
+        Detects trigger keywords, creates a capture record, and prepares for DM dispatch.
+        """
+        comment_text = state.get("comment_text", "")
+        commenter_handle = state.get("commenter_handle", "@unknown_user")
+        commenter_id = state.get("commenter_platform_id", "unknown_id")
+        platform = state.get("platform", "INSTAGRAM")
+        content_id = state.get("content_id", "")
+
+        # Match trigger keywords
+        text_upper = comment_text.upper()
+        matched_keyword = None
+        trigger_keywords = ["GROWTH", "LEAD", "SCALE", "MUSIC", "ENROLL", "COURSE", "PRODUCTION", "RHYTHM", "DIPLOMA", "JOIN"]
+        for keyword in trigger_keywords:
+            if keyword in text_upper:
+                matched_keyword = keyword
+                break
+
+        state["keyword_matched"] = matched_keyword
+        state["is_trigger"] = matched_keyword is not None
+        state["start_time"] = time.time()
+
+        if matched_keyword:
+            # Create capture record via db_manager
+            capture_id = db_manager.create_comment_capture(
+                content_id=content_id,
+                platform=platform,
+                commenter_handle=commenter_handle,
+                commenter_platform_id=commenter_id,
+                comment_text=comment_text,
+                keyword_matched=matched_keyword
+            )
+            state["capture_id"] = capture_id
+            print(f"[SOCIAL_CAPTURE] Keyword '{matched_keyword}' matched in comment by {commenter_handle}")
+        else:
+            state["capture_id"] = None
+            print(f"[SOCIAL_CAPTURE] No trigger keyword found in comment by {commenter_handle}")
+
+        return state
+
+    async def auto_dm_dispatcher_node(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Sends platform-specific auto-DMs for triggered comments.
+        Dispatches via Instagram DM, Facebook Messenger, or queues for WhatsApp (YouTube).
+        """
+        if not state.get("is_trigger"):
+            state["dm_sent"] = False
+            state["milestone"] = "NO_TRIGGER"
+            return state
+
+        platform = state.get("platform", "INSTAGRAM")
+        commenter_handle = state.get("commenter_handle", "@unknown_user")
+        commenter_id = state.get("commenter_platform_id", "unknown_id")
+        commenter_name = commenter_handle.replace("@", "").replace("_", " ").title()
+
+        dm_message = (
+            f"Hey {commenter_name}! 🎵 Saw your interest in our music production content! "
+            f"We're running a special 6-month production program at Rhythm Academy. "
+            f"Want to schedule a free studio visit? Reply YES and we'll set it up!"
+        )
+
+        dm_result = {}
+        if platform == "INSTAGRAM":
+            from backend.social_insights_connector import instagram_connector
+            dm_result = await instagram_connector.send_dm(commenter_id, dm_message)
+        elif platform == "FACEBOOK":
+            from backend.social_insights_connector import facebook_connector
+            dm_result = await facebook_connector.send_messenger_message(commenter_id, dm_message)
+        elif platform == "YOUTUBE":
+            # YouTube doesn't support DMs, route to WhatsApp
+            print(f"[AUTO_DM] YouTube DM not supported. Queuing {commenter_handle} for WhatsApp follow-up.")
+            dm_result = {"status": "queued_whatsapp", "simulated": True}
+
+        dm_sent = dm_result.get("status") in ("success", "queued_whatsapp")
+        state["dm_sent"] = dm_sent
+        state["dm_result"] = dm_result
+
+        # Update capture record with DM status
+        if state.get("capture_id"):
+            db_manager.update_capture_status(
+                capture_id=state["capture_id"],
+                dm_sent=1 if dm_sent else 0
+            )
+
+        state["milestone"] = "SOCIAL_DM_SENT" if dm_sent else "SOCIAL_DM_FAILED"
+        return state
+
+    def route_social_capture_path(self, state: Dict[str, Any]) -> str:
+        """Routes social capture based on keyword detection result."""
+        if state.get("is_trigger"):
+            return "dispatch_dm"
+        return "end_capture"
+
+    @staticmethod
+    def create_social_capture_workflow():
+        """
+        Creates a secondary StateGraph for social comment-to-lead captures.
+        This workflow is independent of the main WhatsApp lead capture graph
+        and can be invoked separately for processing social media comments.
+
+        Graph flow:
+            social_comment_capture → [keyword matched?]
+                → YES → auto_dm_dispatcher → lead_intent_analyzer → END
+                → NO → END
+        """
+        workflow_instance = AgentWorkflowState()
+        social_graph = StateGraph(dict)
+
+        # Define social capture nodes
+        social_graph.add_node("social_comment_capture", workflow_instance.social_comment_capture_node)
+        social_graph.add_node("auto_dm_dispatcher", workflow_instance.auto_dm_dispatcher_node)
+        social_graph.add_node("lead_intent_analyzer", workflow_instance.analyze_lead_intent)
+
+        # Set entry point
+        social_graph.set_entry_point("social_comment_capture")
+
+        # Conditional routing based on keyword match
+        social_graph.add_conditional_edges(
+            "social_comment_capture",
+            workflow_instance.route_social_capture_path,
+            {
+                "dispatch_dm": "auto_dm_dispatcher",
+                "end_capture": END
+            }
+        )
+
+        # After DM dispatch, analyze lead intent for further processing
+        social_graph.add_edge("auto_dm_dispatcher", "lead_intent_analyzer")
+        social_graph.add_edge("lead_intent_analyzer", END)
+
+        return social_graph.compile()

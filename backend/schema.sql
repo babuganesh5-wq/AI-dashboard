@@ -115,3 +115,83 @@ CREATE TABLE IF NOT EXISTS Rhythm_Batches_Faculty (
     scheduled_slots VARCHAR(100), -- e.g. 'Mon/Wed 10:00-12:00'
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- =========================================================================
+-- SOCIAL MEDIA INSIGHTS & COMMENT CAPTURE SCHEMAS
+-- Track content performance, engagement metrics, and comment-to-lead captures
+-- =========================================================================
+
+-- Safe creation of social content ENUM types
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'social_platform') THEN
+        CREATE TYPE social_platform AS ENUM ('INSTAGRAM', 'FACEBOOK', 'YOUTUBE');
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'social_content_type') THEN
+        CREATE TYPE social_content_type AS ENUM ('REEL', 'STORY', 'POST', 'SHORT', 'VIDEO');
+    END IF;
+END $$;
+
+-- Social Content Posts — tracks all monitored content across platforms
+-- Each row represents a single reel, story, post, short, or video
+CREATE TABLE IF NOT EXISTS Social_Content_Posts (
+    content_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    platform social_platform NOT NULL,
+    content_type social_content_type NOT NULL,
+    title VARCHAR(500) NOT NULL,
+    caption TEXT,
+    post_url VARCHAR(2048),
+    media_url VARCHAR(2048),
+    posted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Social Content Metrics — engagement analytics per content piece
+-- Tracks views, likes, comments, shares, saves, reach, impressions, and conversion funnel metrics
+CREATE TABLE IF NOT EXISTS Social_Content_Metrics (
+    metric_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    content_id UUID REFERENCES Social_Content_Posts(content_id) ON DELETE CASCADE,
+    views INT DEFAULT 0,
+    likes INT DEFAULT 0,
+    comments INT DEFAULT 0,
+    shares INT DEFAULT 0,
+    saves INT DEFAULT 0,
+    reach INT DEFAULT 0,
+    impressions INT DEFAULT 0,
+    avg_watch_pct NUMERIC(5, 1) DEFAULT 0.0,
+    dm_triggers_fired INT DEFAULT 0,
+    leads_generated INT DEFAULT 0,
+    students_converted INT DEFAULT 0,
+    last_synced_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Index for fast content-to-metrics lookups
+CREATE INDEX IF NOT EXISTS idx_content_metrics_content_id
+ON Social_Content_Metrics (content_id);
+
+-- Social Comment Captures — comment-to-lead capture records
+-- Tracks each comment that triggered a DM, the DM response, and conversion to lead
+CREATE TABLE IF NOT EXISTS Social_Comment_Captures (
+    capture_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    content_id UUID REFERENCES Social_Content_Posts(content_id) ON DELETE CASCADE,
+    prospect_id UUID REFERENCES CRM_Prospects(prospect_id) ON DELETE SET NULL,
+    platform VARCHAR(50) NOT NULL,
+    commenter_handle VARCHAR(255) NOT NULL,
+    commenter_platform_id VARCHAR(255),
+    comment_text TEXT NOT NULL,
+    keyword_matched VARCHAR(100),
+    dm_sent BOOLEAN DEFAULT FALSE,
+    dm_response_received BOOLEAN DEFAULT FALSE,
+    converted_to_lead BOOLEAN DEFAULT FALSE,
+    lead_id UUID REFERENCES Rhythm_Academy_Leads(lead_id) ON DELETE SET NULL,
+    captured_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for fast capture lookups
+CREATE INDEX IF NOT EXISTS idx_captures_content_id
+ON Social_Comment_Captures (content_id);
+
+CREATE INDEX IF NOT EXISTS idx_captures_keyword
+ON Social_Comment_Captures (keyword_matched);
