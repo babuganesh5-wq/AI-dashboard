@@ -441,4 +441,17 @@ async def check_twenty_crm_status():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/crm/firecrawl/scrape")
+async def trigger_firecrawl_scrape(payload: dict):
+    """Scrapes a URL using Firecrawl API for lead web profile enrichment."""
+    from backend.firecrawl_connector import firecrawl_connector
+    url = payload.get("url")
+    if not url:
+        raise HTTPException(status_code=400, detail="Missing target 'url' in payload.")
+    try:
+        res = await firecrawl_connector.scrape_url(url)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 

@@ -26,6 +26,7 @@ Antigravity AI divides cognitive responsibilities among specialized backend agen
 | **Comment Capture Agent** | Scans inbound social media comment webhooks, runs keyword matching filters. | Inbound webhook / `/captures/simulate` | `social_capture_engine.py` |
 | **Platform DM Dispatcher** | Resolves user profile identities, checks platform type, routes native Direct Messages. | Keyword match positive | `social_insights_connector.py` |
 | **Intent Analyzer Agent** | Assesses lead reply messages, runs semantic sentiment analysis to gauge program interest. | Inbound chat response | `workflow.py` |
+| **Firecrawl Scraper Agent**| Crawls prospect/studio websites to extract bio details, DAW choices, and personal goals for custom pitch messaging. | Visual flow trigger / `/crm/firecrawl/scrape` | `firecrawl_connector.py` |
 | **Installments Nudge Agent**| Monitors overdue split installment ledgers, tracks reminder tallies, schedules follow-ups. | Schedule cron daemon / `/followup` | `crm_followup_engine.py` |
 | **CAPI Lift Optimizer** | Calculates conversion speed-to-lead value coefficients and fires offline signals to ad algorithms. | Lead status change to Qualified | `conversion_engine.py` |
 

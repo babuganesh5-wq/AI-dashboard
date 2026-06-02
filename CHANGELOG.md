@@ -25,7 +25,16 @@ This document details the recent functional enhancements, architectural modifica
 *   **[NEW]** [AGENTS.md](file:///Users/ganeshbabu/.gemini/antigravity/scratch/antigravity-ai/AGENTS.md):
     *   Documented the agentic swarm architecture (division of labor between capture engines, dispatchers, analyzers, and optimizers) and the LangGraph StateGraph nodes.
 
-### 3. Verification & Deployment Pipeline
+### 3. Firecrawl Scraper Integration (Open Web Crawler)
+*   **[NEW]** [backend/firecrawl_connector.py](file:///Users/ganeshbabu/.gemini/antigravity/scratch/antigravity-ai/backend/firecrawl_connector.py):
+    *   Developed the `FirecrawlConnector` adapter using simulated and live modes to fetch webpage text, clean it to markdown, and enrich prospect context.
+*   **[MODIFY]** [backend/ingest_router.py](file:///Users/ganeshbabu/.gemini/antigravity/scratch/antigravity-ai/backend/ingest_router.py):
+    *   Registered `POST /api/v1/crm/firecrawl/scrape` to run url-enrichment operations.
+*   **[MODIFY]** [index.html](file:///Users/ganeshbabu/.gemini/antigravity/scratch/antigravity-ai/index.html):
+    *   Integrated the **Firecrawl Web Crawler Node** (styled in orange glassmorphic borders) into the Visual Node-Based Workflow Canvas.
+    *   Injected SVG flow connectors and mapped inspector panel details for real-time visual telemetry.
+
+### 4. Verification & Deployment Pipeline
 *   **[✓ QA Passed]** Checked all database methods, webhooks, and stategraph flows via the unified runner ([test_suite_runner.py](file:///Users/ganeshbabu/.gemini/antigravity/scratch/antigravity-ai/backend/test_suite_runner.py)) with 100% stable, lock-free concurrency.
 *   **[✓ Vercel Deploy]** Synchronized and compiled local directories to production on Vercel:
     👉 **Production Live Link**: [https://antigravity-ai-amber.vercel.app](https://antigravity-ai-amber.vercel.app)
@@ -42,3 +51,4 @@ This document details the recent functional enhancements, architectural modifica
 | **Stitch DESIGN.md Spec** | Restricts CSS variations, locking typography (Space Grotesk) and colors (Cyan/Indigo) to design system tokens. | **Premium Visual Consistency**: Ensures any future feature addition or layout change looks visually stunning, cohesive, and premium. |
 | **LangGraph AGENTS.md Map** | Formulates state-graph paths, edge dependencies, and Model Context Protocol (MCP) server scopes. | **Swarms Transparency**: Simplifies onboarding for future developer teams looking to expand the AI's cognitive nodes or trigger custom DMs. |
 | **OpenSec Keys Scanning** | Halts sync runs if generic or OpenAI API keys are exposed outside local `.env` variables. | **Enterprise Security Compliance**: Zero risk of accidental credential leaks to public GitHub repositories. |
+| **Firecrawl Web Scraper** | Converts website content to markdown for LLM ingestion. | **Personalized Outreach**: Auto-extracts prospect DAWs, background, and personal goals for tailored course advisory. |
