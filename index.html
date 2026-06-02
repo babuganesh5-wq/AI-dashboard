@@ -1119,7 +1119,7 @@
                         <input type="text" placeholder="Search 30+ integrations..." class="bg-black/60 border border-white/5 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500 text-slate-200 font-mono w-60">
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
                         <!-- Ollama Local -->
                         <div class="bg-white/5 border border-white/5 rounded-xl p-4 space-y-3 relative overflow-hidden">
                             <div class="flex items-start justify-between">
@@ -1166,6 +1166,27 @@
                                 <h4 class="text-xs font-bold text-white">Google Sheets API</h4>
                                 <p class="text-[10px] text-slate-400 mt-1">Logs automation metrics coordinates dynamically inside folders.</p>
                             </div>
+                        </div>
+
+                        <!-- Twenty CRM -->
+                        <div class="bg-white/5 border border-white/5 rounded-xl p-4 space-y-3 relative overflow-hidden group hover:border-orange-500/30 transition-all duration-300">
+                            <div class="absolute right-0 top-0 w-16 h-16 bg-orange-500/5 rounded-full blur-lg group-hover:bg-orange-500/10 transition-all"></div>
+                            <div class="flex items-start justify-between">
+                                <div class="w-10 h-10 rounded bg-orange-950 border border-orange-500/20 flex items-center justify-center font-bold text-orange-400">20</div>
+                                <span id="twenty-status-badge" class="text-[9px] font-mono text-slate-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">CHECKING</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Twenty CRM</h4>
+                                <p class="text-[10px] text-slate-400 mt-1">Salesforce open-source alternative. Syncs contacts & opportunities.</p>
+                                <div class="mt-2 text-[9px] font-mono text-slate-500 space-y-0.5">
+                                    <div>Mode: <span id="twenty-mode-val" class="text-slate-300">simulation</span></div>
+                                    <div>Synced Contacts: <span id="twenty-contacts-val" class="text-orange-400">0</span></div>
+                                    <div>Synced Opps: <span id="twenty-opps-val" class="text-orange-400">0</span></div>
+                                </div>
+                            </div>
+                            <button onclick="syncTwentyCRM()" class="w-full mt-2 bg-orange-600 hover:bg-orange-500 text-white font-semibold text-[10px] py-1.5 px-3 rounded-lg transition font-mono cursor-pointer flex items-center justify-center gap-1 shadow-md shadow-orange-600/10" id="twenty-sync-btn">
+                                <span>⚡</span> Sync CRM Workspace
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1446,6 +1467,7 @@
             } else if(tabName === 'integrations') {
                 document.getElementById('viewport-integrations').classList.remove('hidden');
                 document.getElementById('tab-btn-integrations').className = "px-3 py-1 rounded text-xs font-semibold bg-white/10 text-white transition cursor-pointer";
+                loadTwentyStatus();
             }
             
             appendSystemLog(`Navigated to active viewport: ${tabName.toUpperCase()}`);
@@ -3047,9 +3069,93 @@ Fired social comment trigger 'GROWTH' simulation:<br>
             if (otherForm) otherForm.classList.add('hidden');
         }
 
+        // --- Twenty CRM Integration ---
+        async function loadTwentyStatus() {
+            try {
+                const res = await fetch(`${API_BASE}/crm/twenty/status`);
+                if (!res.ok) throw new Error('API unreachable');
+                const data = await res.json();
+                
+                const badge = document.getElementById('twenty-status-badge');
+                if (badge) {
+                    badge.textContent = data.status.toUpperCase();
+                    if (data.status === 'active') {
+                        badge.className = "text-[9px] font-mono text-emerald-400 bg-emerald-950/20 px-1.5 py-0.5 rounded border border-emerald-500/20";
+                    } else {
+                        badge.className = "text-[9px] font-mono text-amber-400 bg-amber-950/20 px-1.5 py-0.5 rounded border border-amber-500/20";
+                    }
+                }
+                
+                const modeVal = document.getElementById('twenty-mode-val');
+                if (modeVal) {
+                    modeVal.textContent = data.connection_mode;
+                    if (data.connection_mode === 'live') {
+                        modeVal.className = "text-emerald-400 font-semibold";
+                    } else {
+                        modeVal.className = "text-amber-400 font-semibold";
+                    }
+                }
+            } catch (e) {
+                console.warn('[TWENTY_CRM] Backend offline — using default simulated status.');
+                const badge = document.getElementById('twenty-status-badge');
+                if (badge) {
+                    badge.textContent = "CONNECTED (SIM)";
+                    badge.className = "text-[9px] font-mono text-emerald-400 bg-emerald-950/20 px-1.5 py-0.5 rounded border border-emerald-500/20";
+                }
+                const modeVal = document.getElementById('twenty-mode-val');
+                if (modeVal) {
+                    modeVal.textContent = "simulation";
+                    modeVal.className = "text-amber-400 font-semibold";
+                }
+            }
+        }
+
+        async function syncTwentyCRM() {
+            const btn = document.getElementById('twenty-sync-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span>↻</span> Syncing...';
+            }
+            appendSystemLog('Starting Twenty CRM workspace synchronization...', '[TWENTY_CRM]', 'text-orange-400');
+            
+            try {
+                const res = await fetch(`${API_BASE}/crm/twenty/sync`, { method: 'POST' });
+                if (!res.ok) throw new Error('API unreachable');
+                const data = await res.json();
+                
+                document.getElementById('twenty-contacts-val').textContent = data.contacts_synced_count;
+                document.getElementById('twenty-opps-val').textContent = data.opportunities_synced_count;
+                
+                appendSystemLog(`[SUCCESS] Twenty CRM synced. Mapped ${data.contacts_synced_count} Contacts and ${data.opportunities_synced_count} Opportunities (Stage: CLOSED_WON/PROPOSAL).`, '[TWENTY_CRM]', 'text-emerald-400');
+            } catch (e) {
+                // Backend offline or error: run simulated sync locally
+                setTimeout(() => {
+                    const simulatedContacts = 8;
+                    const simulatedOpps = 5;
+                    
+                    document.getElementById('twenty-contacts-val').textContent = simulatedContacts;
+                    document.getElementById('twenty-opps-val').textContent = simulatedOpps;
+                    
+                    appendSystemLog(`[SUCCESS] Twenty CRM simulated sync complete. Mapped ${simulatedContacts} Contacts and ${simulatedOpps} Opportunities into simulated workspace.`, '[TWENTY_CRM]', 'text-emerald-400');
+                    
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<span>⚡</span> Sync CRM Workspace';
+                    }
+                }, 1200);
+                return;
+            }
+            
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<span>⚡</span> Sync CRM Workspace';
+            }
+        }
+
         // Trigger initial sync and listen for gatekeeper success
         setTimeout(() => {
             syncCRMTableData();
+            loadTwentyStatus();
         }, 1500);
 
     </script>

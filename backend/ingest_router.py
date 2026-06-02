@@ -392,3 +392,53 @@ async def trigger_crm_followup_loops():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/crm/twenty/sync")
+async def sync_to_twenty_crm():
+    """Syncs all SQLite prospects and leads into Twenty CRM workspace entities."""
+    from backend.twenty_connector import twenty_connector
+    from backend.db_manager import db_manager
+    try:
+        prospects = db_manager.get_all_prospects()
+        leads = db_manager.get_all_leads_with_details()
+        
+        contact_syncs = []
+        opp_syncs = []
+        
+        for pr in prospects:
+            res = await twenty_connector.sync_prospect_to_twenty(pr["prospect_id"])
+            contact_syncs.append(res)
+            
+        for ld in leads:
+            res = await twenty_connector.sync_lead_opportunity(ld["lead_id"])
+            opp_syncs.append(res)
+            
+        return {
+            "status": "success",
+            "message": "Twenty CRM workspace synchronization completed successfully.",
+            "contacts_synced_count": len(contact_syncs),
+            "opportunities_synced_count": len(opp_syncs),
+            "mode": "simulation" if twenty_connector.is_simulated else "live",
+            "results": {
+                "contacts": contact_syncs,
+                "opportunities": opp_syncs
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/crm/twenty/status")
+async def check_twenty_crm_status():
+    """Returns the workspace integration status for Twenty CRM."""
+    from backend.twenty_connector import twenty_connector
+    try:
+        return {
+            "status": "active",
+            "workspace_type": "Twenty CRM",
+            "connection_mode": "simulation" if twenty_connector.is_simulated else "live",
+            "api_url": twenty_connector.api_url,
+            "security": "authorized" if twenty_connector.api_key else "unauthorized"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+

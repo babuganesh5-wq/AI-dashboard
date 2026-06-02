@@ -326,6 +326,11 @@ class RhythmDatabaseManager:
             row = cursor.fetchone()
             return dict(row) if row else None
 
+    def get_all_prospects(self) -> List[Dict[str, Any]]:
+        with self.get_connection() as conn:
+            cursor = conn.execute("SELECT * FROM CRM_Prospects")
+            return [dict(row) for row in cursor.fetchall()]
+
     def delete_prospect(self, prospect_id: str) -> bool:
         with self.get_connection() as conn:
             cursor = conn.execute("DELETE FROM CRM_Prospects WHERE prospect_id = ?", (prospect_id,))
